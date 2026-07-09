@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cursorGlow();
   smoothAnchorScroll();
   dynamicNav();
+  macDockToolkit();
 });
 
 /* ================================
@@ -201,6 +202,56 @@ function dynamicNav() {
   );
 
   sections.forEach((section) => spyObserver.observe(section));
+}
+
+/* ================================
+   MAC-STYLE DOCK (DAILY TOOLKIT)
+================================ */
+
+function macDockToolkit() {
+  const dock = document.querySelector(".toolkit-dock");
+  if (!dock) return;
+
+  const items = Array.from(dock.querySelectorAll(".dock-item"));
+  const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (!supportsHover) return;
+
+  const maxScale = 1.55;
+  const falloff = 140;
+  let ticking = false;
+  let lastEvent = null;
+
+  function applyMagnify(event) {
+    items.forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const itemCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(event.clientX - itemCenter);
+
+      const strength = Math.max(0, 1 - distance / falloff);
+      const scale = 1 + strength * (maxScale - 1);
+      const lift = strength * 14;
+
+      item.style.transform = `scale(${scale}) translateY(${-lift}px)`;
+    });
+
+    ticking = false;
+  }
+
+  dock.addEventListener("mousemove", (event) => {
+    lastEvent = event;
+
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => applyMagnify(lastEvent));
+    }
+  });
+
+  dock.addEventListener("mouseleave", () => {
+    items.forEach((item) => {
+      item.style.transform = "scale(1) translateY(0)";
+    });
+  });
 }
 
 /* ================================
