@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Gil Tejano | Creative Specialist Portfolio</title>
+  <meta
+    name="description"
+    content="Gil Tejano is a Creative Specialist / Graphic Designer crafting premium product visuals, retail campaign materials, and brand-consistent designs for lifestyle and interior brands."
+  />
+  <link rel="canonical" href="https://giltejano.netlify.app/" />
+  <meta name="theme-color" content="#050505" />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Gil Tejano | Creative Specialist Portfolio" />
+  <meta
+    property="og:description"
+    content="Premium product visuals, retail campaign materials, and brand-consistent designs for lifestyle and interior brands."
+  />
+  <meta property="og:url" content="https://giltejano.netlify.app/" />
+  <meta name="twitter:card" content="summary" />
+
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23050505'/%3E%3Ctext x='50' y='68' font-family='Arial,sans-serif' font-size='60' font-weight='900' fill='%23c6ff2e' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E"
+  />
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
@@ -13,7 +35,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,500;1,600&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&display=swap"
     rel="stylesheet"
   />
 
@@ -25,7 +47,9 @@
 </head>
 
 <body>
-  <main class="portfolio-page">
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <main class="portfolio-page" id="main-content">
 
     <!-- HERO SECTION -->
     <section class="hero section-border">
@@ -36,7 +60,7 @@
         </div>
 
         <div class="availability">
-          <span class="status-dot"></span>
+          <span class="status-dot" aria-hidden="true"></span>
           <p>Available for<br />Freelance Projects</p>
         </div>
       </header>
@@ -58,13 +82,13 @@
 
           <a href="#projects" class="text-link">
             View My Work
-            <i class="fa-solid fa-arrow-right"></i>
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </a>
         </div>
 
         <div class="hero-visual">
           <!-- Replace this image with your own cutout photo -->
-          <img src="images/gil-hero.png" alt="Gil Tejano portrait" />
+          <img src="images/gil-hero.svg" alt="Gil Tejano portrait" width="500" height="680" />
         </div>
 
         <div class="hero-roles">
@@ -79,7 +103,7 @@
     <section class="impact-panel section-border">
       <div class="impact-intro">
         <div class="icon-mark">
-          <i class="fa-solid fa-sparkles"></i>
+          <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
         </div>
 
         <h2>
@@ -94,25 +118,25 @@
       </div>
 
       <div class="stat-card">
-        <i class="fa-regular fa-star"></i>
+        <i class="fa-regular fa-star" aria-hidden="true"></i>
         <h3>5+</h3>
         <p>Years of<br />Design Experience</p>
       </div>
 
       <div class="stat-card">
-        <i class="fa-solid fa-cube"></i>
+        <i class="fa-solid fa-cube" aria-hidden="true"></i>
         <h3>120+</h3>
         <p>Projects<br />Completed</p>
       </div>
 
       <div class="stat-card">
-        <i class="fa-solid fa-layer-group"></i>
+        <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
         <h3>10+</h3>
         <p>Brands<br />Handled</p>
       </div>
 
       <div class="stat-card">
-        <i class="fa-solid fa-briefcase"></i>
+        <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
         <h3>40%</h3>
         <p>Reduced External<br />Agency Reliance</p>
       </div>
@@ -126,15 +150,15 @@
           Projects
         </h2>
 
-        <a href="#" class="text-link">
+        <a href="#projects" class="text-link">
           Explore All Works
-          <i class="fa-solid fa-arrow-right"></i>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
         </a>
       </div>
 
       <div class="project-grid">
         <article class="project-card">
-          <img src="images/project-01.jpg" alt="Premium product visual design" />
+          <img src="images/project-01.svg" alt="Premium product visual design" width="400" height="310" loading="lazy" />
 
           <div class="project-info">
             <span>01</span>
@@ -146,7 +170,7 @@
         </article>
 
         <article class="project-card">
-          <img src="images/project-02.jpg" alt="Retail campaign design" />
+          <img src="images/project-02.svg" alt="Retail campaign design" width="400" height="310" loading="lazy" />
 
           <div class="project-info">
             <span>02</span>
@@ -158,7 +182,7 @@
         </article>
 
         <article class="project-card">
-          <img src="images/project-03.jpg" alt="Catalog layout design" />
+          <img src="images/project-03.svg" alt="Catalog layout design" width="400" height="310" loading="lazy" />
 
           <div class="project-info">
             <span>03</span>
@@ -170,7 +194,7 @@
         </article>
 
         <article class="project-card">
-          <img src="images/project-04.jpg" alt="Brand consistent social media design" />
+          <img src="images/project-04.svg" alt="Brand consistent social media design" width="400" height="310" loading="lazy" />
 
           <div class="project-info">
             <span>04</span>
@@ -191,11 +215,11 @@
           I Do
         </h2>
 
-        <i class="fa-solid fa-arrow-right"></i>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </div>
 
       <div class="service-card">
-        <i class="fa-solid fa-pen-nib"></i>
+        <i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
         <h3>Visual Design</h3>
         <p>
           Premium graphics for campaigns, social media, product launches, and
@@ -204,7 +228,7 @@
       </div>
 
       <div class="service-card">
-        <i class="fa-solid fa-object-group"></i>
+        <i class="fa-solid fa-object-group" aria-hidden="true"></i>
         <h3>Layout Design</h3>
         <p>
           Catalogs, brochures, flyers, posters, presentations, and print-ready
@@ -213,7 +237,7 @@
       </div>
 
       <div class="service-card">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
         <h3>Photo Manipulation</h3>
         <p>
           Clean product compositions, image enhancements, lifestyle visuals,
@@ -222,7 +246,7 @@
       </div>
 
       <div class="service-card">
-        <i class="fa-solid fa-code"></i>
+        <i class="fa-solid fa-code" aria-hidden="true"></i>
         <h3>Web Design</h3>
         <p>
           Modern, responsive portfolio and landing page interfaces with strong
@@ -236,7 +260,7 @@
       <div class="experience-card section-border">
         <div class="card-header">
           <h2>Experience & Education</h2>
-          <i class="fa-solid fa-arrow-right"></i>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
         </div>
 
         <div class="timeline">
@@ -284,7 +308,7 @@
         </p>
 
         <div class="client-info">
-          <img src="images/client.jpg" alt="Client portrait" />
+          <img src="images/client.svg" alt="Client portrait" width="108" height="108" loading="lazy" />
 
           <div>
             <h3>Creative Partner</h3>
@@ -294,14 +318,11 @@
 
         <div class="slider-dots">
           <span class="active"></span>
-          <span></span>
-          <span></span>
-          <span></span>
         </div>
       </div>
 
       <div class="image-card section-border">
-        <img src="images/detail-shot.jpg" alt="Abstract premium visual detail" />
+        <img src="images/detail-shot.svg" alt="Abstract premium visual detail" width="400" height="410" loading="lazy" />
       </div>
     </section>
 
@@ -309,7 +330,7 @@
     <section class="trusted-section section-border">
       <div class="trusted-label">
         <p>Trusted By</p>
-        <i class="fa-solid fa-arrow-right"></i>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </div>
 
       <div class="brand-list">
@@ -342,23 +363,24 @@
 
         <ul>
           <li>
-            <i class="fa-regular fa-envelope"></i>
+            <i class="fa-regular fa-envelope" aria-hidden="true"></i>
             <a href="mailto:hello@giltejano.com">hello@giltejano.com</a>
           </li>
 
           <li>
-            <i class="fa-solid fa-phone"></i>
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+            <!-- TODO: replace with real phone number -->
             <a href="tel:+639000000000">+63 900 000 0000</a>
           </li>
 
           <li>
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
             <span>Cavite, Philippines / Remote</span>
           </li>
 
           <li>
-            <i class="fa-solid fa-globe"></i>
-            <a href="#">giltejano.netlify.app</a>
+            <i class="fa-solid fa-globe" aria-hidden="true"></i>
+            <a href="https://giltejano.netlify.app" target="_blank" rel="noopener">giltejano.netlify.app</a>
           </li>
         </ul>
       </div>
@@ -367,15 +389,15 @@
         <p>Let’s Connect</p>
 
         <!-- Replace with your own QR code -->
-        <img src="images/qr-code.png" alt="QR code" />
+        <img src="images/qr-code.svg" alt="QR code linking to Gil Tejano's contact details" width="130" height="130" loading="lazy" />
 
         <a href="mailto:hello@giltejano.com" class="circle-button">
-          <i class="fa-solid fa-arrow-right"></i>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
         </a>
       </div>
 
       <div class="thank-you-card">
-        <img src="images/gil-contact.png" alt="Gil Tejano portrait" />
+        <img src="images/gil-contact.svg" alt="Gil Tejano portrait" width="500" height="600" loading="lazy" />
         <p>Thank You</p>
       </div>
     </section>

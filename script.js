@@ -14,8 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
 ================================ */
 
 function revealOnScroll() {
+  // Section-level entrance is already handled by the CSS "fadeUp" animation on load;
+  // this only staggers the individual cards inside those sections as they scroll into view.
   const revealElements = document.querySelectorAll(
-    ".impact-panel, .projects-section, .services-section, .experience-testimonial, .trusted-section, .contact-section, .project-card, .service-card, .stat-card"
+    ".project-card, .service-card, .stat-card"
   );
 
   revealElements.forEach((element) => {

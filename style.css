@@ -37,6 +37,7 @@ a {
   --line: rgba(255, 255, 255, 0.14);
   --accent: #c6ff2e;
   --accent-soft: rgba(198, 255, 46, 0.12);
+  --font-display: "Fraunces", serif;
 }
 
 /* ================================
@@ -274,10 +275,12 @@ a {
 }
 
 .impact-intro h2 {
-  font-size: 27px;
-  line-height: 0.95;
-  letter-spacing: -1px;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: -0.3px;
   margin-bottom: 18px;
 }
 
@@ -552,7 +555,8 @@ a {
 .quote-mark {
   color: var(--accent);
   font-size: 95px;
-  font-family: Georgia, serif;
+  font-family: var(--font-display);
+  font-weight: 500;
   line-height: 0.7;
   margin-bottom: 20px;
 }
@@ -659,9 +663,10 @@ a {
 
 .brand-list span {
   color: #bcbcbc;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-display);
+  font-weight: 500;
   font-size: 23px;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   text-transform: uppercase;
 }
 
@@ -693,10 +698,12 @@ a {
 }
 
 .contact-heading h2 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
   font-size: clamp(48px, 5vw, 86px);
-  line-height: 0.82;
-  letter-spacing: -3px;
-  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: -1px;
 }
 
 .star-accent {
@@ -802,11 +809,72 @@ a {
   position: relative;
   z-index: 2;
   color: var(--accent);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
   font-size: 58px;
   line-height: 1;
   transform: rotate(-7deg);
   margin-bottom: 28px;
+}
+
+/* ================================
+   SKIP LINK
+================================ */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 16px;
+  z-index: 100;
+  background: var(--accent);
+  color: #050505;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+/* ================================
+   SCROLL-REVEAL CARDS
+================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================================
+   CURSOR GLOW
+================================ */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 280px;
+  margin: -140px 0 0 -140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(198, 255, 46, 0.16), transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: screen;
+}
+
+@media (max-width: 900px) {
+  .cursor-glow {
+    display: none;
+  }
 }
 
 /* ================================
