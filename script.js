@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   magneticProjectCards();
   cursorGlow();
   smoothAnchorScroll();
+  dynamicNav();
 });
 
 /* ================================
@@ -129,6 +130,77 @@ function smoothAnchorScroll() {
       });
     });
   });
+}
+
+/* ================================
+   FLOATING DYNAMIC-ISLAND NAV
+================================ */
+
+function dynamicNav() {
+  const nav = document.querySelector(".dynamic-nav");
+  if (!nav) return;
+
+  const navItems = Array.from(nav.querySelectorAll(".nav-item"));
+  const sections = navItems
+    .map((item) => document.querySelector(item.getAttribute("data-target")))
+    .filter(Boolean);
+
+  let suppressSpy = false;
+  let suppressTimer = null;
+
+  function setActive(targetId) {
+    navItems.forEach((item) => {
+      item.classList.toggle(
+        "active",
+        item.getAttribute("data-target") === targetId
+      );
+    });
+  }
+
+  // Clicking a nav item jumps the active pill immediately (rather than
+  // waiting for the scroll-spy below) and briefly suppresses the spy so
+  // sections the scroll passes through on the way don't steal it back.
+  navItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      const targetId = item.getAttribute("data-target");
+      const targetSection = document.querySelector(targetId);
+
+      setActive(targetId);
+
+      suppressSpy = true;
+      clearTimeout(suppressTimer);
+      suppressTimer = setTimeout(() => {
+        suppressSpy = false;
+      }, 900);
+
+      if (targetSection) {
+        targetSection.classList.remove("nav-target-flash");
+        void targetSection.offsetWidth;
+        targetSection.classList.add("nav-target-flash");
+        setTimeout(() => {
+          targetSection.classList.remove("nav-target-flash");
+        }, 900);
+      }
+    });
+  });
+
+  const spyObserver = new IntersectionObserver(
+    (entries) => {
+      if (suppressSpy) return;
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(`#${entry.target.id}`);
+        }
+      });
+    },
+    {
+      rootMargin: "-45% 0px -45% 0px",
+      threshold: 0,
+    }
+  );
+
+  sections.forEach((section) => spyObserver.observe(section));
 }
 
 /* ================================
