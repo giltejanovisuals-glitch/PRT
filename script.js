@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   smoothAnchorScroll();
   dynamicNav();
   macDockToolkit();
+  servicesCarousel();
 });
 
 /* ================================
@@ -252,6 +253,40 @@ function macDockToolkit() {
       item.style.transform = "scale(1) translateY(0)";
     });
   });
+}
+
+/* ================================
+   SERVICES ARROW CAROUSEL
+================================ */
+
+function servicesCarousel() {
+  const scroller = document.querySelector(".services-scroll");
+  const prevButton = document.querySelector(".services-arrow-prev");
+  const nextButton = document.querySelector(".services-arrow-next");
+
+  if (!scroller || !prevButton || !nextButton) return;
+
+  const scrollByPage = (direction) => {
+    scroller.scrollBy({
+      left: direction * scroller.clientWidth * 0.9,
+      behavior: "smooth",
+    });
+  };
+
+  prevButton.addEventListener("click", () => scrollByPage(-1));
+  nextButton.addEventListener("click", () => scrollByPage(1));
+
+  const updateArrowState = () => {
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+
+    prevButton.disabled = scroller.scrollLeft <= 0;
+    nextButton.disabled = scroller.scrollLeft >= maxScrollLeft - 1;
+  };
+
+  scroller.addEventListener("scroll", updateArrowState, { passive: true });
+  window.addEventListener("resize", updateArrowState);
+
+  updateArrowState();
 }
 
 /* ================================

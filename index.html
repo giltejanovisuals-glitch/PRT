@@ -52,7 +52,14 @@
   <main class="portfolio-page" id="main-content">
 
     <!-- HERO SECTION -->
-    <section class="hero section-border" id="home">
+    <section class="hero" id="home">
+      <div class="hero-bg" aria-hidden="true">
+        <video class="hero-bg-video" autoplay muted loop playsinline preload="auto">
+          <source src="vid/bg-portrait.mp4" media="(max-width: 900px)" type="video/mp4" />
+          <source src="vid/bg.mp4" type="video/mp4" />
+        </video>
+      </div>
+
       <header class="site-header">
         <div class="brand-label">
           <span>Portfolio</span>
@@ -74,28 +81,39 @@
             <span>Designer</span>
           </h1>
 
+          <div class="hero-divider" aria-hidden="true"></div>
+
           <p class="hero-description">
             I craft premium product visuals, retail campaign materials, and
             brand-consistent designs that help lifestyle and interior brands
             look more refined, clear, and valuable.
           </p>
 
-          <a href="#projects" class="text-link">
-            View My Work
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
+          <a href="#projects" class="hero-cta">View My Work</a>
         </div>
+      </div>
 
-        <div class="hero-visual">
-          <!-- Replace this image with your own cutout photo -->
-          <img src="images/gil-hero.svg" alt="Gil Tejano portrait" width="500" height="680" />
-        </div>
+      <div class="hero-roles">
+        <p>Graphic Designer</p>
+        <p>Creative Specialist</p>
+        <p>Product Visuals</p>
+      </div>
 
-        <div class="hero-roles">
-          <p>Graphic Designer</p>
-          <p>Creative Specialist</p>
-          <p>Product Visuals</p>
-        </div>
+      <div class="hero-social">
+        <a href="mailto:hello@giltejano.com" aria-label="Email">
+          <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+        </a>
+        <a href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+        </a>
+        <a href="#" target="_blank" rel="noopener" aria-label="Behance">
+          <i class="fa-brands fa-behance" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="hero-index" aria-hidden="true">
+        <em></em>
+        <span>01</span>
       </div>
     </section>
 
@@ -215,7 +233,22 @@
           I Do
         </h2>
 
-        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        <div class="services-nav">
+          <button
+            type="button"
+            class="services-arrow services-arrow-prev"
+            aria-label="Scroll services left"
+          >
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="services-arrow services-arrow-next"
+            aria-label="Scroll services right"
+          >
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
 
       <div class="services-scroll">
@@ -600,20 +633,27 @@
 
       <div class="marquee">
         <div class="marquee-track">
-          <!-- Replace these placeholder logos with your own brand logo files -->
-          <img src="images/brands/hooga.svg" alt="Hooga" width="110" height="32" loading="lazy" />
-          <img src="images/brands/dunlopillo.svg" alt="Dunlopillo" width="110" height="32" loading="lazy" />
-          <img src="images/brands/mooni.svg" alt="Mooni" width="110" height="32" loading="lazy" />
-          <img src="images/brands/metal-lite.svg" alt="Metal-Lite" width="110" height="32" loading="lazy" />
-          <img src="images/brands/porta-mobili.svg" alt="Porta Mobili" width="110" height="32" loading="lazy" />
-          <img src="images/brands/jvp.svg" alt="JVP" width="110" height="32" loading="lazy" />
+          <img src="images/brands/etro.svg" alt="Etro" loading="lazy" />
+          <img src="images/brands/stoneleaf.svg" alt="Stoneleaf" loading="lazy" />
+          <img src="images/brands/hooga.svg" alt="Hooga" loading="lazy" />
+          <img src="images/brands/mooni.svg" alt="Mooni" loading="lazy" />
+          <img src="images/brands/bw.svg" alt="BW Group" loading="lazy" />
+          <img src="images/brands/dp.svg" alt="Dunlopillo" loading="lazy" />
+          <img src="images/brands/mim.svg" alt="Metal-Lite" loading="lazy" />
+          <img src="images/brands/porta.svg" alt="Porta Mobili" loading="lazy" />
+          <img src="images/brands/rif.svg" alt="Riflessi" loading="lazy" />
+          <img src="images/brands/tisettanta.svg" alt="Tisettanta" loading="lazy" />
 
-          <img src="images/brands/hooga.svg" alt="" width="110" height="32" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/dunlopillo.svg" alt="" width="110" height="32" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/mooni.svg" alt="" width="110" height="32" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/metal-lite.svg" alt="" width="110" height="32" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/porta-mobili.svg" alt="" width="110" height="32" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/jvp.svg" alt="" width="110" height="32" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/etro.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/stoneleaf.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/hooga.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/mooni.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/bw.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/dp.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/mim.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/porta.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/rif.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="images/brands/tisettanta.svg" alt="" loading="lazy" aria-hidden="true" />
         </div>
       </div>
     </section>
