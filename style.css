@@ -400,6 +400,90 @@ a {
   font-style: normal;
 }
 
+/* Hero elements float into place. ".story-armed" is only ever added by
+   JS, so without JS these render in their final, visible state. */
+.hero.story-armed .hero-copy .eyebrow,
+.hero.story-armed .hero-copy h1,
+.hero.story-armed .hero-copy .hero-description,
+.hero.story-armed .hero-copy .hero-cta,
+.hero.story-armed .hero-social,
+.hero.story-armed .hero-roles,
+.hero.story-armed .hero-index {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero.story-armed .hero-copy .hero-divider {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hero.story-armed .hero-social {
+  transform: translate(-18px, 10px);
+}
+
+.hero.story-armed .hero-roles,
+.hero.story-armed .hero-index {
+  transform: translate(18px, 10px);
+}
+
+.hero.story-armed.is-revealed .hero-copy .eyebrow,
+.hero.story-armed.is-revealed .hero-copy h1,
+.hero.story-armed.is-revealed .hero-copy .hero-description,
+.hero.story-armed.is-revealed .hero-copy .hero-cta,
+.hero.story-armed.is-revealed .hero-social,
+.hero.story-armed.is-revealed .hero-roles,
+.hero.story-armed.is-revealed .hero-index {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.hero.story-armed.is-revealed .hero-copy .hero-divider {
+  transform: scaleX(1);
+}
+
+.hero.story-armed.is-revealed .hero-copy .eyebrow {
+  transition-delay: 0.05s;
+}
+
+.hero.story-armed.is-revealed .hero-copy h1 {
+  transition-delay: 0.15s;
+}
+
+.hero.story-armed.is-revealed .hero-copy .hero-divider {
+  transition-delay: 0.38s;
+}
+
+.hero.story-armed.is-revealed .hero-copy .hero-description {
+  transition-delay: 0.44s;
+}
+
+.hero.story-armed.is-revealed .hero-copy .hero-cta {
+  transition-delay: 0.58s;
+}
+
+.hero.story-armed.is-revealed .hero-social,
+.hero.story-armed.is-revealed .hero-roles,
+.hero.story-armed.is-revealed .hero-index {
+  transition-delay: 0.7s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero.story-armed .hero-copy .eyebrow,
+  .hero.story-armed .hero-copy h1,
+  .hero.story-armed .hero-copy .hero-divider,
+  .hero.story-armed .hero-copy .hero-description,
+  .hero.story-armed .hero-copy .hero-cta,
+  .hero.story-armed .hero-social,
+  .hero.story-armed .hero-roles,
+  .hero.story-armed .hero-index {
+    transition: none;
+  }
+}
+
 /* ================================
    IMPACT / STATS
 ================================ */
@@ -495,38 +579,185 @@ a {
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 420px 250px;
+  gap: 46px 40px;
+  padding: 24px clamp(4px, 3vw, 36px) 64px;
 }
 
 .project-card {
   position: relative;
-  min-height: 310px;
-  overflow: hidden;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: var(--panel);
 }
 
-.project-card img {
+.project-card:nth-child(1) {
+  grid-column: 1 / 8;
+  grid-row: 1 / 3;
+  --tilt: -3deg;
+  --stack-x: 60px;
+  --stack-y: 40px;
+  --stack-rot: 14deg;
+  --stack-delay: 0s;
+}
+
+.project-card:nth-child(2) {
+  grid-column: 8 / 13;
+  grid-row: 1 / 2;
+  --tilt: 2.5deg;
+  --stack-x: -70px;
+  --stack-y: 50px;
+  --stack-rot: -10deg;
+  --stack-delay: 0.12s;
+}
+
+.project-card:nth-child(3) {
+  grid-column: 8 / 11;
+  grid-row: 2 / 3;
+  --tilt: -2deg;
+  --stack-x: -20px;
+  --stack-y: -60px;
+  --stack-rot: 16deg;
+  --stack-delay: 0.22s;
+}
+
+.project-card:nth-child(4) {
+  grid-column: 11 / 13;
+  grid-row: 2 / 3;
+  --tilt: 3deg;
+  --stack-x: -50px;
+  --stack-y: -70px;
+  --stack-rot: -18deg;
+  --stack-delay: 0.3s;
+}
+
+/* The artboard is the tilted "board" itself; .project-card only handles
+   grid placement so the cursor-driven perspective tilt in script.js and
+   the resting tilt here don't fight over the same transform. */
+.artboard {
+  position: relative;
   height: 100%;
-  min-height: 310px;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.12) brightness(0.82);
-  transition: transform 0.55s ease, filter 0.55s ease;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.6);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease,
+    opacity 0.5s ease;
 }
 
-.project-card::after {
+/* Project boards start piled together and fly apart into the bento
+   layout as the section scrolls into view - a stack unstacking. */
+.project-grid.story-armed .project-card .artboard {
+  opacity: 0;
+  transform: translate(var(--stack-x, 0), var(--stack-y, 0)) scale(0.82)
+    rotate(var(--stack-rot, 0deg));
+}
+
+.project-grid.story-armed.is-revealed .project-card .artboard {
+  opacity: 1;
+  transform: rotate(var(--tilt, 0deg));
+  transition-delay: var(--stack-delay, 0s);
+}
+
+/* Stacked "sheets" peeking out behind the front artboard */
+.artboard::before,
+.artboard::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: -1;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+
+.artboard::before {
+  transform: rotate(6deg);
+  opacity: 0.8;
+}
+
+.artboard::after {
+  transform: rotate(-8deg);
+  opacity: 0.5;
+}
+
+.project-card:hover .artboard,
+.project-card:focus-within .artboard {
+  transform: rotate(0deg) translateY(-10px);
+  box-shadow: 0 36px 64px -20px rgba(0, 0, 0, 0.7);
+}
+
+.project-card:hover .artboard::before,
+.project-card:focus-within .artboard::before {
+  transform: rotate(10deg) translate(12px, 8px);
+}
+
+.project-card:hover .artboard::after,
+.project-card:focus-within .artboard::after {
+  transform: rotate(-13deg) translate(-14px, 12px);
+  opacity: 0.32;
+}
+
+.artboard img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.12) brightness(0.82);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+
+.project-card:hover .artboard img,
+.project-card:focus-within .artboard img {
+  transform: scale(1.06);
+  filter: grayscale(0.35) contrast(1.15) brightness(0.9);
+}
+
+.artboard-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.88), transparent 58%);
 }
 
-.project-card:hover img {
-  transform: scale(1.07);
-  filter: grayscale(0.4) contrast(1.15) brightness(0.9);
+.artboard-pin {
+  position: absolute;
+  top: -8px;
+  left: 30px;
+  z-index: 3;
+  width: 32px;
+  height: 16px;
+  background: var(--accent-light);
+  opacity: 0.9;
+  transform: rotate(-4deg);
+}
+
+.artboard-expand {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(245, 245, 240, 0.12);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 13px;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.project-card:hover .artboard-expand,
+.project-card:focus-within .artboard-expand {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .project-info {
@@ -538,6 +769,10 @@ a {
   display: flex;
   align-items: flex-end;
   gap: 16px;
+}
+
+.project-info > div {
+  min-width: 0;
 }
 
 .project-info span {
@@ -558,6 +793,58 @@ a {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+/* Bigger type for card 1 only applies where it's actually the large
+   featured board (the bento grid above 900px) - at narrower widths
+   every card is the same size again. */
+@media (min-width: 901px) {
+  .project-card:nth-child(1) .project-info span {
+    font-size: 36px;
+  }
+
+  .project-card:nth-child(1) .project-info h3 {
+    font-size: 20px;
+  }
+}
+
+/* The two small bottom-right boards are too narrow for the number
+   and title to sit side by side, so stack them instead. */
+.project-card:nth-child(3) .project-info,
+.project-card:nth-child(4) .project-info {
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.project-card:nth-child(3) .project-info span,
+.project-card:nth-child(4) .project-info span {
+  font-size: 18px;
+}
+
+.project-card:nth-child(3) .project-info h3,
+.project-card:nth-child(4) .project-info h3 {
+  font-size: 12px;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.project-card:nth-child(3) .project-info p,
+.project-card:nth-child(4) .project-info p {
+  font-size: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artboard,
+  .artboard::before,
+  .artboard::after,
+  .artboard img,
+  .artboard-expand {
+    transition: none;
+  }
 }
 
 /* ================================
@@ -680,6 +967,43 @@ a {
   line-height: 1.55;
 }
 
+/* Each card reveals like a design-layers panel building up: icon first
+   (base layer), then the heading, then the body copy settle on top. */
+.service-card.reveal i,
+.service-card.reveal h3,
+.service-card.reveal p {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-card.reveal.is-visible i,
+.service-card.reveal.is-visible h3,
+.service-card.reveal.is-visible p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.service-card.reveal.is-visible i {
+  transition-delay: 0.05s;
+}
+
+.service-card.reveal.is-visible h3 {
+  transition-delay: 0.18s;
+}
+
+.service-card.reveal.is-visible p {
+  transition-delay: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card.reveal i,
+  .service-card.reveal h3,
+  .service-card.reveal p {
+    transition: none;
+  }
+}
+
 /* ================================
    DAILY TOOLKIT (DOCK)
 ================================ */
@@ -724,14 +1048,39 @@ a {
   will-change: transform;
 }
 
+/* Icons slide up into the dock, staggered left to right (the stagger
+   itself is set inline per item in script.js). Once settled, the
+   transition swaps back to the fast timing the hover-magnify needs. */
+.toolkit-dock.story-armed .dock-item {
+  opacity: 0;
+  transform: translateY(26px) scale(0.7);
+  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.toolkit-dock.story-armed.is-revealed .dock-item {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.toolkit-dock.story-armed.story-settled .dock-item {
+  transition: transform 0.18s ease-out;
+}
+
 .dock-item img {
   width: 64px;
   height: 64px;
   border-radius: 18px;
   background: var(--panel-soft);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(79, 195, 181, var(--dock-glow, 0));
   object-fit: contain;
   padding: 12px;
+  box-shadow: 0 0 calc(var(--dock-glow, 0) * 28px) rgba(79, 195, 181, calc(var(--dock-glow, 0) * 0.65)),
+    0 calc(var(--dock-glow, 0) * 12px) calc(var(--dock-glow, 0) * 24px) rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.18s ease-out, border-color 0.18s ease-out;
+}
+
+.dock-item.is-active {
+  transform: scale(1.3) translateY(-10px);
 }
 
 .dock-tooltip {
@@ -791,131 +1140,263 @@ a {
   }
 }
 
+/* Shared caption for touch devices: an above-icon tooltip would get
+   clipped by the swipeable row's horizontal scroll container, so the
+   active tool's description surfaces here instead as you swipe/tap. */
+.toolkit-active-caption {
+  display: none;
+  min-height: 62px;
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-soft);
+  text-align: center;
+}
+
+.toolkit-active-caption h4 {
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.toolkit-active-caption p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .toolkit-active-caption {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .toolkit-dock {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 22px 40vw 14px;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 24px,
+      #000 calc(100% - 24px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 24px,
+      #000 calc(100% - 24px),
+      transparent 100%
+    );
+  }
+
+  .toolkit-dock::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dock-item {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+}
+
 /* ================================
-   EXPERIENCE + TESTIMONIAL
+   EXPERIENCE (horizontal timeline)
 ================================ */
-.experience-testimonial {
+.experience-section {
   display: grid;
-  grid-template-columns: 1.15fr 1.1fr 0.85fr;
+  grid-template-columns: 1.15fr 3fr;
+  margin-top: 42px;
+}
+
+.timeline-h {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 30px 20px;
+  padding: 40px clamp(16px, 3vw, 34px) 34px;
+}
+
+.timeline-h::before {
+  content: "";
+  position: absolute;
+  left: clamp(16px, 3vw, 34px);
+  right: clamp(16px, 3vw, 34px);
+  top: 44px;
+  height: 1px;
+  background: var(--line);
+}
+
+.timeline-h-item {
+  position: relative;
+  flex: 1 1 110px;
+  max-width: 160px;
+  padding-top: 22px;
+}
+
+.timeline-h-item::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #777;
+}
+
+.timeline-h-item.is-current {
+  flex: 1.6 1 180px;
+  max-width: 240px;
+}
+
+.timeline-h-item.is-current::before {
+  background: var(--accent-light);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.timeline-h-date {
+  display: block;
+  color: #b7b7b7;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.timeline-h-tag {
+  display: inline-block;
+  color: var(--accent-light);
+  background: var(--accent-soft);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-bottom: 12px;
+}
+
+.timeline-h-item h3 {
+  font-size: 14px;
+  line-height: 1.3;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.timeline-h-item p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* The timeline appears like a scrubbing playhead: the connecting line
+   draws left to right, and each marker pops as the "playhead" reaches
+   it, with its label following right after. */
+.experience-section.story-armed .timeline-h::before {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.experience-section.story-armed.is-revealed .timeline-h::before {
+  transform: scaleX(1);
+}
+
+.experience-section.story-armed .timeline-h-item::before {
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item::before {
+  transform: scale(1);
+}
+
+.experience-section.story-armed .timeline-h-item > * {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(1)::before {
+  transition-delay: 0.15s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(1) > * {
+  transition-delay: 0.25s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(2)::before {
+  transition-delay: 0.3s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(2) > * {
+  transition-delay: 0.4s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(3)::before {
+  transition-delay: 0.45s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(3) > * {
+  transition-delay: 0.55s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(4)::before {
+  transition-delay: 0.6s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(4) > * {
+  transition-delay: 0.7s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(5)::before {
+  transition-delay: 0.75s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(5) > * {
+  transition-delay: 0.85s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(6)::before {
+  transition-delay: 0.9s;
+}
+
+.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(6) > * {
+  transition-delay: 1s;
+}
+
+/* ================================
+   TESTIMONIAL
+================================ */
+.testimonial-section {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
   margin-top: 42px;
 }
 
 .testimonial-card,
 .image-card {
-  min-height: 410px;
+  min-height: 360px;
 }
 
-.experience-card {
-  height: 410px;
-  display: flex;
-  flex-direction: column;
-}
-
-.experience-card,
 .testimonial-card {
   padding: 34px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-  flex-shrink: 0;
-}
-
-.card-header h2 {
-  font-size: 18px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.card-header i {
-  color: var(--accent-light);
-}
-
-.timeline {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding-right: 12px;
-  margin-right: -12px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
-}
-
-.timeline::-webkit-scrollbar {
-  width: 4px;
-}
-
-.timeline::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.timeline::-webkit-scrollbar-thumb {
-  background: var(--line);
-  border-radius: 2px;
-}
-
-.timeline::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-light);
-}
-
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 110px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--line);
-}
-
-.timeline-item {
-  position: relative;
-  display: grid;
-  grid-template-columns: 92px 1fr;
-  gap: 40px;
-  margin-bottom: 34px;
-}
-
-.timeline-item:last-child {
-  margin-bottom: 0;
-}
-
-.timeline-item::before {
-  content: "";
-  position: absolute;
-  left: 106px;
-  top: 2px;
-  width: 9px;
-  height: 9px;
-  background: #777;
-  border-radius: 50%;
-}
-
-.timeline-item span {
-  color: #b7b7b7;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.timeline-item h3 {
-  font-size: 14px;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.timeline-item p {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.testimonial-card {
-  border-left: none;
   border-right: none;
 }
 
@@ -984,7 +1465,7 @@ a {
 
 .image-card img {
   height: 100%;
-  min-height: 410px;
+  min-height: 360px;
   object-fit: cover;
   filter: grayscale(1) contrast(1.15);
 }
@@ -1030,10 +1511,16 @@ a {
   margin-bottom: 14px;
 }
 
-.education-card > p:last-child {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.55;
+.education-tag {
+  display: inline-block;
+  color: var(--accent-light);
+  background: var(--accent-soft);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  padding: 3px 10px;
 }
 
 /* ================================
@@ -1150,16 +1637,151 @@ a {
 }
 
 .contact-title {
-  max-width: 100%;
+  max-width: 780px;
   font-size: clamp(20px, 3.4vw, 40px);
   font-weight: 800;
   line-height: 1.25;
   letter-spacing: -0.5px;
-  white-space: nowrap;
 }
 
 .contact-title .highlight {
   color: var(--accent-light);
+}
+
+/* The contact form itself is styled like a software export/render
+   panel - project metadata rows, a live status, and the action bar
+   that "sends" it. */
+.export-panel {
+  width: 100%;
+  max-width: 640px;
+  margin-top: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-soft);
+  overflow: hidden;
+  text-align: left;
+}
+
+.export-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.export-panel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-light);
+}
+
+.export-panel-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.export-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.export-field-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.export-field-value {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.export-field-value.is-placeholder {
+  color: var(--muted);
+  font-weight: 500;
+  font-style: italic;
+}
+
+.export-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-light);
+}
+
+.export-status-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  flex-shrink: 0;
+}
+
+.export-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  opacity: 0.4;
+  animation: statusPulse 1.8s ease-out infinite;
+}
+
+@keyframes statusPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.45;
+  }
+
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .export-status-dot::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.export-panel .contact-actions {
+  justify-content: flex-start;
+  padding: 20px 22px;
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .export-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .export-field-value {
+    text-align: left;
+  }
+
+  .export-panel .contact-actions {
+    justify-content: center;
+  }
 }
 
 .contact-actions {
@@ -1261,6 +1883,68 @@ a {
   color: var(--accent-light);
 }
 
+/* The contact section reveals like an export/send screen completing:
+   a progress line draws in, content settles in sequence, and the
+   primary button pings once as if it just finished rendering and is
+   ready to send. */
+.contact-section.story-armed .contact-eyebrow,
+.contact-section.story-armed .contact-title,
+.contact-section.story-armed .export-panel,
+.contact-section.story-armed .contact-cards {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-section.story-armed .contact-eyebrow .line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.3s;
+}
+
+.contact-section.story-armed.is-revealed .contact-eyebrow,
+.contact-section.story-armed.is-revealed .contact-title,
+.contact-section.story-armed.is-revealed .export-panel,
+.contact-section.story-armed.is-revealed .contact-cards {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contact-section.story-armed.is-revealed .contact-eyebrow .line {
+  transform: scaleX(1);
+}
+
+.contact-section.story-armed.is-revealed .contact-title {
+  transition-delay: 0.15s;
+}
+
+.contact-section.story-armed.is-revealed .export-panel {
+  transition-delay: 0.3s;
+}
+
+.contact-section.story-armed.is-revealed .contact-cards {
+  transition-delay: 0.45s;
+}
+
+@keyframes exportReadyPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(79, 195, 181, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 14px rgba(79, 195, 181, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(79, 195, 181, 0);
+  }
+}
+
+.contact-section.story-armed.is-revealed .cta-button {
+  animation: exportReadyPulse 1.2s ease-out 1;
+  animation-delay: 0.6s;
+}
+
 /* ================================
    SITE FOOTER
 ================================ */
@@ -1342,31 +2026,6 @@ a {
 @media (max-width: 900px) {
   .cursor-glow {
     display: none;
-  }
-}
-
-/* ================================
-   SIMPLE ANIMATION
-================================ */
-.hero-copy,
-.impact-panel,
-.projects-section,
-.services-section,
-.experience-testimonial,
-.trusted-strip,
-.contact-section {
-  animation: fadeUp 0.8s ease both;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -1504,7 +2163,8 @@ a {
     width: 100%;
   }
 
-  .toolkit-section {
+  .toolkit-section,
+  .experience-section {
     grid-template-columns: 1fr;
   }
 
@@ -1512,14 +2172,6 @@ a {
     grid-column: 1 / -1;
     border-right: none;
     border-bottom: 1px solid var(--line);
-  }
-
-  .experience-testimonial {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .image-card {
-    grid-column: 1 / -1;
   }
 }
 
@@ -1580,14 +2232,25 @@ a {
 
   .project-grid {
     grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: none;
+    grid-auto-rows: 280px;
+    gap: 38px 28px;
   }
 
-  .experience-testimonial {
+  .project-card:nth-child(1),
+  .project-card:nth-child(2),
+  .project-card:nth-child(3),
+  .project-card:nth-child(4) {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .testimonial-section {
     grid-template-columns: 1fr;
   }
 
   .testimonial-card {
-    border-top: none;
+    border-bottom: none;
   }
 
   .contact-section {
@@ -1652,9 +2315,31 @@ a {
     gap: 18px;
   }
 
-  .project-grid,
   .education-section {
     grid-template-columns: 1fr;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 260px;
+    gap: 46px 0;
+    padding: 20px 10px 48px;
+  }
+
+  .project-card:nth-child(1) {
+    --tilt: -2deg;
+  }
+
+  .project-card:nth-child(2) {
+    --tilt: 1.5deg;
+  }
+
+  .project-card:nth-child(3) {
+    --tilt: -1.5deg;
+  }
+
+  .project-card:nth-child(4) {
+    --tilt: 2deg;
   }
 
   .education-card {
@@ -1672,18 +2357,21 @@ a {
     max-width: 200px;
   }
 
-  .timeline::before {
+  .timeline-h::before {
+    display: none;
+  }
+
+  .timeline-h-item,
+  .timeline-h-item.is-current {
+    flex: 1 1 100%;
+    max-width: none;
+    padding-top: 0;
+    padding-left: 20px;
+  }
+
+  .timeline-h-item::before {
+    top: 5px;
     left: 0;
-  }
-
-  .timeline-item {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    padding-left: 24px;
-  }
-
-  .timeline-item::before {
-    left: -4px;
   }
 
   .service-card {
