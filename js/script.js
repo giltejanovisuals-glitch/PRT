@@ -2,16 +2,32 @@
    PORTFOLIO INTERACTIONS
 ================================ */
 
+/* Shared input-capability check: desktop-only effects (custom cursor
+   glow, magnetic cards, dock magnification) only make sense with a
+   real mouse. Touch devices - including touch laptops - skip them
+   entirely rather than just hiding their output with CSS. */
+const supportsFinePointer = window.matchMedia(
+  "(hover: hover) and (pointer: fine)"
+).matches;
+
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
+
 document.addEventListener("DOMContentLoaded", () => {
   revealOnScroll();
   scrollStory();
   toolkitDockReveal();
-  magneticProjectCards();
-  cursorGlow();
-  smoothAnchorScroll();
+  heroMediaBehavior();
   dynamicNav();
   macDockToolkit();
   servicesCarousel();
+  smoothAnchorScroll();
+
+  if (supportsFinePointer) {
+    magneticProjectCards();
+    cursorGlow();
+  }
 });
 
 /* ================================
@@ -66,7 +82,7 @@ function scrollStory() {
 
   if (!targets.length) return;
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (prefersReducedMotion) {
     return;
   }
 
@@ -88,7 +104,7 @@ function scrollStory() {
 }
 
 /* ================================
-   PROJECT CARD HOVER MOVEMENT
+   PROJECT CARD HOVER MOVEMENT (desktop / fine pointer only)
    Bound on the grid (event delegation) rather than on each card
    directly, since js/projects.js may replace the cards after
    data/projects.json loads - delegation keeps this working no matter
@@ -126,7 +142,7 @@ function magneticProjectCards() {
 }
 
 /* ================================
-   CURSOR GLOW EFFECT
+   CURSOR GLOW EFFECT (desktop / fine pointer only)
 ================================ */
 
 function cursorGlow() {
@@ -140,10 +156,16 @@ function cursorGlow() {
   let glowX = 0;
   let glowY = 0;
 
-  window.addEventListener("mousemove", (event) => {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-  });
+  let rafId = null;
+
+  window.addEventListener(
+    "mousemove",
+    (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+    },
+    { passive: true }
+  );
 
   function animateGlow() {
     glowX += (mouseX - glowX) * 0.12;
@@ -151,10 +173,53 @@ function cursorGlow() {
 
     glow.style.transform = `translate(${glowX}px, ${glowY}px)`;
 
-    requestAnimationFrame(animateGlow);
+    rafId = requestAnimationFrame(animateGlow);
   }
 
+  // Don't spend a rAF loop animating a glow nobody can see.
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+    } else if (!rafId) {
+      animateGlow();
+    }
+  });
+
   animateGlow();
+}
+
+/* ================================
+   HERO VIDEO / MEDIA BEHAVIOR
+   Respects reduced-motion, avoids autoplay on save-data connections,
+   and pauses decorative playback while the tab is hidden.
+================================ */
+
+function heroMediaBehavior() {
+  const video = document.querySelector(".hero-bg-video");
+  if (!video) return;
+
+  const connection =
+    navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+  const isDataSaver = Boolean(connection && connection.saveData);
+
+  if (prefersReducedMotion || isDataSaver) {
+    video.pause();
+    video.removeAttribute("autoplay");
+    video.loop = false;
+    return;
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      video.pause();
+    } else {
+      video.play().catch(() => {
+        /* Autoplay can be blocked after backgrounding - the poster
+           image still covers this case, so there's nothing to fix. */
+      });
+    }
+  });
 }
 
 /* ================================
@@ -177,7 +242,7 @@ function smoothAnchorScroll() {
       event.preventDefault();
 
       targetSection.scrollIntoView({
-        behavior: "smooth",
+        behavior: prefersReducedMotion ? "auto" : "smooth",
         block: "start",
       });
     });
@@ -186,7 +251,18 @@ function smoothAnchorScroll() {
 
 /* ================================
    FLOATING DYNAMIC-ISLAND NAV
+   On mobile the pill only shows 4 stops (Home, Work, About, Contact -
+   see css/responsive.css), but every section still needs to light up
+   the nearest visible pill as it scrolls past, so the map below
+   collapses the hidden sections onto their closest kept destination.
 ================================ */
+
+const MOBILE_NAV_QUERY = "(max-width: 767px)";
+const MOBILE_SECTION_FALLBACK = {
+  "#services": "#experience",
+  "#toolkit": "#experience",
+  "#education": "#experience",
+};
 
 function dynamicNav() {
   const nav = document.querySelector(".dynamic-nav");
@@ -197,14 +273,21 @@ function dynamicNav() {
     .map((item) => document.querySelector(item.getAttribute("data-target")))
     .filter(Boolean);
 
+  const isMobileNav = () => window.matchMedia(MOBILE_NAV_QUERY).matches;
+
   let suppressSpy = false;
   let suppressTimer = null;
 
   function setActive(targetId) {
+    const resolvedId =
+      isMobileNav() && MOBILE_SECTION_FALLBACK[targetId]
+        ? MOBILE_SECTION_FALLBACK[targetId]
+        : targetId;
+
     navItems.forEach((item) => {
       item.classList.toggle(
         "active",
-        item.getAttribute("data-target") === targetId
+        item.getAttribute("data-target") === resolvedId
       );
     });
   }
@@ -266,7 +349,7 @@ function toolkitDockReveal() {
   const dock = document.querySelector(".toolkit-dock");
   if (!dock) return;
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (prefersReducedMotion) {
     return;
   }
 
@@ -311,9 +394,8 @@ function macDockToolkit() {
   if (!dock) return;
 
   const items = Array.from(dock.querySelectorAll(".dock-item"));
-  const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  if (supportsHover) {
+  if (supportsFinePointer) {
     const maxScale = 1.55;
     const falloff = 140;
     let ticking = false;
@@ -336,14 +418,18 @@ function macDockToolkit() {
       ticking = false;
     }
 
-    dock.addEventListener("mousemove", (event) => {
-      lastEvent = event;
+    dock.addEventListener(
+      "mousemove",
+      (event) => {
+        lastEvent = event;
 
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(() => applyMagnify(lastEvent));
-      }
-    });
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => applyMagnify(lastEvent));
+        }
+      },
+      { passive: true }
+    );
 
     dock.addEventListener("mouseleave", () => {
       items.forEach((item) => {
@@ -355,10 +441,10 @@ function macDockToolkit() {
     return;
   }
 
-  // Touch devices: the dock becomes a swipeable row. An above-icon
-  // tooltip would get clipped by the horizontal scroll container, so
-  // the nearest-to-center tool's description mirrors into a shared
-  // caption below the row instead, updating as you swipe or tap.
+  // Touch (and keyboard) devices: the dock is a swipeable/focusable row.
+  // An above-icon tooltip would get clipped by the horizontal scroll
+  // container, so the nearest-to-center (or focused) tool's description
+  // mirrors into a shared caption below the row instead.
   const caption = document.querySelector(".toolkit-active-caption");
   const captionTitle = caption ? caption.querySelector("h4") : null;
   const captionText = caption ? caption.querySelector("p") : null;
@@ -370,9 +456,12 @@ function macDockToolkit() {
       other.style.setProperty("--dock-glow", active ? "1" : "0");
     });
 
-    if (captionTitle && captionText) {
-      captionTitle.textContent = item.querySelector(".dock-tooltip h4").textContent;
-      captionText.textContent = item.querySelector(".dock-tooltip p").textContent;
+    const tooltipTitle = item.querySelector(".dock-tooltip h4");
+    const tooltipText = item.querySelector(".dock-tooltip p");
+
+    if (captionTitle && captionText && tooltipTitle && tooltipText) {
+      captionTitle.textContent = tooltipTitle.textContent;
+      captionText.textContent = tooltipText.textContent;
     }
   }
 
@@ -417,9 +506,15 @@ function macDockToolkit() {
       item.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
       setActive(item);
     });
+
+    // Keyboard focus (Tab) gets the same active/caption treatment as a
+    // tap, so the tooltip content is reachable without a mouse.
+    item.addEventListener("focus", () => setActive(item));
   });
 
-  setActive(items[0]);
+  if (items.length) {
+    setActive(items[0]);
+  }
 }
 
 /* ================================
@@ -436,7 +531,7 @@ function servicesCarousel() {
   const scrollByPage = (direction) => {
     scroller.scrollBy({
       left: direction * scroller.clientWidth * 0.9,
-      behavior: "smooth",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
     });
   };
 
@@ -451,9 +546,24 @@ function servicesCarousel() {
   };
 
   scroller.addEventListener("scroll", updateArrowState, { passive: true });
-  window.addEventListener("resize", updateArrowState);
+  window.addEventListener("resize", debounce(updateArrowState, 150));
+  window.addEventListener("orientationchange", () =>
+    setTimeout(updateArrowState, 200)
+  );
 
   updateArrowState();
+}
+
+/* ================================
+   UTILS
+================================ */
+
+function debounce(fn, wait) {
+  let timer = null;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), wait);
+  };
 }
 
 /* ================================
@@ -462,11 +572,9 @@ function servicesCarousel() {
 
 const dots = document.querySelectorAll(".slider-dots span");
 
-dots.forEach((dot, index) => {
+dots.forEach((dot) => {
   dot.addEventListener("click", () => {
     dots.forEach((item) => item.classList.remove("active"));
     dot.classList.add("active");
-
-    console.log(`Selected testimonial ${index + 1}`);
   });
 });

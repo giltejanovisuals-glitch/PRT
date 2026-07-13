@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Page Not Found | Gil Tejano Portfolio</title>
   <meta name="description" content="This page wandered outside the artboard. Return to the Gil Tejano portfolio homepage." />
@@ -36,7 +36,8 @@
     /* Page-specific layout only - colors, fonts, and buttons all reuse
        the shared design system from css/style.css. */
     .not-found {
-      min-height: calc(100vh - 80px);
+      min-height: calc(100svh - 80px);
+      min-height: calc(100dvh - 80px);
       display: flex;
       flex-direction: column;
       align-items: center;

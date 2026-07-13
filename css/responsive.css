@@ -3,26 +3,24 @@
    Breakpoint and input-capability adjustments. Base component styles
    live in style.css; this file only changes layout/sizing per viewport
    or device (hover vs. touch).
+
+   BREAKPOINT SYSTEM
+   - Capability queries (hover/pointer)   : device input, not viewport
+   - max-width: 1023px  Tablets           : grid/column collapses
+   - max-width: 767px   Large phones +    : full mobile composition
+                         small tablets      (header, hero, nav, cards)
+   - max-width: 479px   Standard phones   : type-scale + spacing refinement
+   - max-width: 359px   Small phones      : last-resort single-column
+   - landscape           Short mobile      : hero height safety net
+   - prefers-reduced-motion                : motion overrides
+   Each tier only declares what actually changes at that tier - values
+   that already scale via clamp()/vars are left alone.
 ================================ */
 
 /* --------------------------------
-   PROJECT CARD - large board type
-   Bigger type for card 1 only applies where it's actually the large
-   featured board (the bento grid above 900px) - at narrower widths
-   every card is the same size again.
--------------------------------- */
-@media (min-width: 901px) {
-  .project-card:nth-child(1) .project-info span {
-    font-size: 36px;
-  }
-
-  .project-card:nth-child(1) .project-info h3 {
-    font-size: 20px;
-  }
-}
-
-/* --------------------------------
-   TOOLKIT DOCK - hover vs. touch
+   CAPABILITY QUERIES
+   These key off the input device, not the viewport, so a touch
+   laptop and a small phone get the same treatment.
 -------------------------------- */
 @media (hover: hover) and (pointer: fine) {
   .dock-item:hover .dock-tooltip,
@@ -33,59 +31,66 @@
 }
 
 @media (hover: none), (pointer: coarse) {
+  /* Dock: swipeable row with a shared caption instead of per-icon tooltips */
   .toolkit-active-caption {
     display: block;
   }
-}
 
-@media (max-width: 900px) {
-  .toolkit-dock {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 22px 40vw 14px;
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 24px,
-      #000 calc(100% - 24px),
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 24px,
-      #000 calc(100% - 24px),
-      transparent 100%
-    );
-  }
-
-  .toolkit-dock::-webkit-scrollbar {
-    display: none;
-  }
-
-  .dock-item {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
-  }
-}
-
-/* --------------------------------
-   CURSOR GLOW - desktop only
--------------------------------- */
-@media (max-width: 900px) {
+  /* Cursor-follow glow only makes sense with a real pointer */
   .cursor-glow {
     display: none;
   }
+
+  /* Project boards: nothing important may depend on :hover */
+  .artboard-expand {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .artboard img,
+  .project-card:hover .artboard img,
+  .project-card:focus-within .artboard img {
+    transform: none;
+    filter: grayscale(0.35) contrast(1.15) brightness(0.9);
+  }
+
+  .project-card:hover .artboard,
+  .project-card:focus-within .artboard {
+    transform: rotate(var(--tilt, 0deg));
+    box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.6);
+  }
+
+  .project-card:hover .artboard::before,
+  .project-card:focus-within .artboard::before {
+    transform: rotate(3deg);
+  }
+
+  .project-card:hover .artboard::after,
+  .project-card:focus-within .artboard::after {
+    transform: rotate(-4deg);
+    opacity: 0.5;
+  }
+
+  .project-card:active .artboard {
+    transform: scale(0.98);
+    transition-duration: 0.15s;
+  }
+
+  /* Subtle tap feedback standing in for :hover on primary actions */
+  .hero-cta:active,
+  .cta-button:active,
+  .cta-button-outline:active,
+  .hero-social a:active,
+  .services-arrow:active:not(:disabled) {
+    transform: scale(0.96);
+  }
 }
 
 /* --------------------------------
-   BREAKPOINTS
+   TABLET TIER
+   Column/grid collapses shared by tablets and phones alike.
 -------------------------------- */
-@media (max-width: 1200px) {
+@media (max-width: 1023px) {
   .portfolio-page {
     width: min(100% - 32px, 1100px);
   }
@@ -123,68 +128,271 @@
     border-right: none;
     border-bottom: 1px solid var(--line);
   }
+
+  /* Grid/flex items default to an automatic min-width of their
+     content's min-content size, which lets a fixed max-width caption
+     (e.g. .toolkit-caption) or a wide flex row force the whole grid
+     track wider than the viewport. min-width: 0 restores normal
+     shrink behavior without touching the content itself. */
+  .impact-intro,
+  .toolkit-dock-wrap,
+  .timeline-h {
+    min-width: 0;
+  }
+
+  .project-card:nth-child(1) .project-info span {
+    font-size: 32px;
+  }
+
+  .project-card:nth-child(1) .project-info h3 {
+    font-size: 18px;
+  }
 }
 
-@media (max-width: 900px) {
+/* --------------------------------
+   MOBILE TIER (<=767px)
+   The full mobile-first composition: header, hero, stats, project
+   cards, dock, nav, and section rhythm.
+-------------------------------- */
+@media (max-width: 767px) {
+  /* --- Page rhythm --- */
+  .portfolio-page {
+    width: 100%;
+    padding: 0 0 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Bring the strongest content (work) up near the hero without
+     touching the desktop DOM/visual order. */
+  .hero { order: 1; }
+  .projects-section { order: 2; }
+  .impact-panel { order: 3; }
+  .services-section { order: 4; }
+  .toolkit-section { order: 5; }
+  .experience-section { order: 6; }
+  .testimonial-section { order: 7; }
+  .trusted-strip { order: 8; }
+  .education-section { order: 9; }
+  .contact-section { order: 10; }
+  .site-footer { order: 11; }
+
+  .impact-panel,
+  .services-section,
+  .toolkit-section,
+  .experience-section,
+  .testimonial-section,
+  .trusted-strip,
+  .education-section,
+  .contact-section {
+    margin-top: var(--mobile-section-space);
+  }
+
+  /* --- Header: compact, horizontal, never stacked --- */
   .site-header {
-    padding: 28px 24px 0;
+    align-items: center;
+    padding: max(14px, env(safe-area-inset-top)) var(--mobile-gutter) 0;
+    gap: 12px;
+  }
+
+  .brand-label {
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .brand-label span {
+    font-size: 10px;
+    letter-spacing: 3px;
+    white-space: nowrap;
   }
 
   .brand-label .line {
-    width: 90px;
+    width: 28px;
   }
 
   .availability {
+    flex-shrink: 0;
+    gap: 8px;
     font-size: 10px;
+    white-space: nowrap;
   }
 
+  .availability .availability-text-full {
+    display: none;
+  }
+
+  .availability .availability-text-short {
+    display: block;
+  }
+
+  .status-dot {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* --- Hero: dedicated mobile composition, not a shrunk desktop one --- */
   .hero {
-    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+    min-height: 100dvh;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
     margin-top: 0;
   }
 
   .hero-content {
-    padding: 20px 24px 34px;
-  }
-
-  .hero-social {
-    left: 24px;
-  }
-
-  .hero-index {
-    right: 10px;
+    flex: 1 1 auto;
+    min-height: 0;
+    max-width: 100%;
+    align-items: flex-end;
+    padding: 16px var(--mobile-gutter) 28px;
   }
 
   .hero-copy {
     max-width: 100%;
-    padding-top: 70px;
+    padding-bottom: 0;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
   }
 
   .hero h1 {
-    letter-spacing: -2px;
+    font-size: clamp(2.8rem, 12vw, 4.5rem);
+    line-height: 0.9;
+    letter-spacing: -1px;
+  }
+
+  .hero h1 span {
+    font-size: clamp(1.7rem, 8vw, 2.6rem);
+    margin: 4px 0 0 2px;
+  }
+
+  .hero-divider {
+    margin-top: 18px;
   }
 
   .hero-description {
-    margin-top: 24px;
+    max-width: 34ch;
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 18px 0 24px;
+  }
+
+  .hero-cta {
+    width: 100%;
+    max-width: 320px;
+    min-height: 48px;
+    padding: 15px 24px;
+  }
+
+  /* Decorative "01" index competes with the headline for attention -
+     it's the lowest-priority element in the mobile hierarchy. */
+  .hero-index {
+    display: none;
   }
 
   .hero-roles {
     display: none;
   }
 
+  /* Flows into place after the hero content instead of floating over
+     it, and clears the fixed bottom nav. */
+  .hero-social {
+    position: static;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    padding: 0 var(--mobile-gutter)
+      calc(var(--mobile-nav-space) + env(safe-area-inset-bottom));
+  }
+
+  .hero-bg::before {
+    background: linear-gradient(
+        180deg,
+        rgba(6, 6, 6, 0.55) 0%,
+        rgba(6, 6, 6, 0.2) 30%,
+        rgba(6, 6, 6, 0.55) 62%,
+        rgba(6, 6, 6, 0.92) 100%
+      ),
+      linear-gradient(
+        100deg,
+        rgba(6, 6, 6, 0.75) 0%,
+        rgba(6, 6, 6, 0.35) 55%,
+        rgba(6, 6, 6, 0.15) 100%
+      );
+  }
+
+  /* Mobile-specific crop: keeps the subject visible instead of the
+     wide desktop framing, and biases up so the headline (bottom-
+     anchored) never sits over the focal point. Tune per the real clip. */
+  .hero-bg-video {
+    object-position: 62% 20%;
+  }
+
+  /* --- Impact / stats: compact 2x2, no dead space --- */
   .impact-panel {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .stat-card:nth-child(3) {
+  .impact-intro {
+    padding: 28px var(--mobile-gutter);
+  }
+
+  .impact-intro h2 {
+    font-size: clamp(24px, 6vw, 28px);
+  }
+
+  .stat-card {
+    padding: 22px var(--mobile-gutter);
+    min-height: 132px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .impact-panel .stat-card:nth-child(3),
+  .impact-panel .stat-card:nth-child(5) {
     border-right: none;
   }
 
+  .impact-panel .stat-card:nth-child(4),
+  .impact-panel .stat-card:nth-child(5) {
+    border-bottom: none;
+  }
+
+  .stat-card i {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .stat-card h3 {
+    font-size: clamp(30px, 8vw, 38px);
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+
+  .stat-card p {
+    font-size: 11px;
+  }
+
+  /* --- Selected work: one artboard per row, stable and tap-friendly --- */
+  .projects-section {
+    padding: 0;
+  }
+
+  .section-heading {
+    padding: 0 var(--mobile-gutter);
+    margin-bottom: 18px;
+  }
+
   .project-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     grid-template-rows: none;
-    grid-auto-rows: 280px;
-    gap: 38px 28px;
+    grid-auto-rows: auto;
+    gap: 26px;
+    padding: 0 var(--mobile-gutter) 8px;
   }
 
   .project-card:nth-child(1),
@@ -193,118 +401,121 @@
   .project-card:nth-child(4) {
     grid-column: auto;
     grid-row: auto;
+    --tilt: 0deg;
+    /* The desktop "stack unstacking" reveal offsets (up to 70px) are
+       tuned for the wide bento grid - on a single narrow column they
+       push the pre-reveal artboard past the viewport edge. */
+    --stack-x: 0px;
+    --stack-y: 18px;
+    --stack-rot: 3deg;
   }
 
-  .testimonial-section {
-    grid-template-columns: 1fr;
+  .project-card .artboard {
+    aspect-ratio: 4 / 5;
+    height: auto;
   }
 
-  .testimonial-card {
-    border-bottom: none;
+  .artboard::before {
+    transform: rotate(3deg);
   }
 
-  .contact-section {
-    padding: 44px 28px;
-  }
-}
-
-@media (max-width: 640px) {
-  .portfolio-page {
-    width: calc(100% - 20px);
-    padding: 10px 0;
+  .artboard::after {
+    transform: rotate(-4deg);
   }
 
-  .site-header {
-    flex-direction: column;
-    gap: 20px;
+  /* All four boards read the same on a single-column phone layout -
+     the compact bento treatment for cards 3/4 no longer applies. */
+  .project-card:nth-child(3) .project-info,
+  .project-card:nth-child(4) .project-info {
+    left: 22px;
+    right: 22px;
+    bottom: 22px;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 16px;
   }
 
-  .brand-label span {
-    font-size: 11px;
+  .project-card:nth-child(3) .project-info span,
+  .project-card:nth-child(4) .project-info span {
+    font-size: 24px;
   }
 
-  .contact-title {
-    white-space: normal;
-    font-size: clamp(22px, 6vw, 30px);
+  .project-card:nth-child(3) .project-info h3,
+  .project-card:nth-child(4) .project-info h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
   }
 
-  .hero {
-    min-height: 660px;
+  .project-card:nth-child(3) .project-info p,
+  .project-card:nth-child(4) .project-info p {
+    font-size: 12px;
   }
 
-  .hero h1 {
-    font-size: clamp(40px, 15vw, 72px);
-    letter-spacing: -1.5px;
+  /* --- Capabilities carousel --- */
+  .section-title-small {
+    padding: 26px var(--mobile-gutter);
   }
 
-  .hero h1 span {
-    font-size: clamp(30px, 11vw, 52px);
+  .services-nav {
+    gap: 8px;
   }
 
-  .hero-description {
-    font-size: 14px;
-    margin-top: 18px;
+  .services-arrow {
+    width: 44px;
+    height: 44px;
   }
 
-  .impact-panel {
-    grid-template-columns: 1fr;
+  .services-scroll {
+    scroll-snap-type: x mandatory;
+    padding-left: var(--mobile-gutter);
+    scroll-padding-left: var(--mobile-gutter);
   }
 
-  .impact-intro,
-  .stat-card {
-    border-right: none;
-    border-bottom: 1px solid var(--line);
+  .service-track {
+    padding-right: var(--mobile-gutter);
   }
 
-  .stat-card:last-child {
-    border-bottom: none;
+  .service-card {
+    flex: 0 0 80%;
+    max-width: 340px;
+    padding: 24px 22px;
   }
 
-  .section-heading {
-    flex-direction: column;
-    gap: 18px;
+  /* --- Creative dock: real edge padding, snap, first/last reachable --- */
+  .toolkit-dock-wrap {
+    padding: 28px var(--mobile-gutter);
   }
 
-  .education-section {
-    grid-template-columns: 1fr;
+  .toolkit-caption {
+    max-width: 100%;
+    font-size: 12px;
+    margin-bottom: 22px;
   }
 
-  .project-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 260px;
-    gap: 46px 0;
-    padding: 20px 10px 48px;
+  .toolkit-dock {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 18px var(--mobile-gutter) 6px;
+    scroll-padding-inline: var(--mobile-gutter);
   }
 
-  .project-card:nth-child(1) {
-    --tilt: -2deg;
+  .toolkit-dock::-webkit-scrollbar {
+    display: none;
   }
 
-  .project-card:nth-child(2) {
-    --tilt: 1.5deg;
+  .dock-item {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
   }
 
-  .project-card:nth-child(3) {
-    --tilt: -1.5deg;
-  }
-
-  .project-card:nth-child(4) {
-    --tilt: 2deg;
-  }
-
-  .education-card {
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .dock-item img {
-    width: 52px;
-    height: 52px;
-  }
-
-  .dock-tooltip {
-    min-width: 170px;
-    max-width: 200px;
+  /* --- Timeline: clean single column, vertical connector --- */
+  .timeline-h {
+    display: block;
+    padding: 26px var(--mobile-gutter) 4px;
   }
 
   .timeline-h::before {
@@ -313,53 +524,117 @@
 
   .timeline-h-item,
   .timeline-h-item.is-current {
-    flex: 1 1 100%;
+    flex: none;
     max-width: none;
-    padding-top: 0;
-    padding-left: 20px;
+    padding: 0 0 24px 22px;
+    border-left: 1px solid var(--line);
+  }
+
+  .timeline-h-item:last-child {
+    padding-bottom: 0;
+    border-left-color: transparent;
   }
 
   .timeline-h-item::before {
-    top: 5px;
-    left: 0;
+    top: 2px;
+    left: -4px;
   }
 
-  .service-card {
-    flex-basis: 78vw;
-    padding: 28px 24px;
+  /* --- Testimonial / trust --- */
+  .testimonial-section {
+    grid-template-columns: 1fr;
+  }
+
+  .testimonial-card {
+    border-bottom: none;
+    padding: 28px var(--mobile-gutter);
+  }
+
+  .testimonial-card > p {
+    font-size: 16px;
+  }
+
+  .image-card,
+  .image-card img {
+    min-height: 260px;
   }
 
   .trusted-strip {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    padding: 26px 22px;
+    gap: 14px;
+    padding: 26px var(--mobile-gutter);
   }
 
   .marquee {
     width: 100%;
   }
 
-  .contact-section {
-    padding: 40px 22px;
+  /* --- Foundation / education --- */
+  .education-section {
+    grid-template-columns: 1fr;
   }
 
+  .education-card {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: 26px var(--mobile-gutter);
+  }
+
+  .education-card:last-child {
+    border-bottom: none;
+  }
+
+  /* --- Contact --- */
+  .contact-section {
+    padding: 44px var(--mobile-gutter);
+    gap: 22px;
+  }
+
+  .contact-title {
+    font-size: clamp(24px, 7vw, 32px);
+  }
+
+  .export-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .export-field-value {
+    text-align: left;
+  }
+
+  .export-panel .contact-actions {
+    justify-content: center;
+  }
+
+  .cta-button,
+  .cta-button-outline {
+    flex: 1 1 220px;
+    justify-content: center;
+  }
+
+  /* --- Footer: safe clearance above the fixed nav pill --- */
   .site-footer {
     flex-direction: column;
     align-items: flex-start;
-    padding: 22px;
-    margin-bottom: 54px;
+    padding: 22px var(--mobile-gutter);
+    margin-bottom: calc(var(--mobile-nav-space) + env(safe-area-inset-bottom));
   }
 
+  /* --- Floating nav: four essential stops, always tappable --- */
   .dynamic-nav {
-    bottom: 16px;
-    gap: 4px;
+    left: 50%;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    max-width: calc(100% - 24px);
+    gap: 2px;
     padding: 6px;
   }
 
   .nav-item {
-    height: 40px;
-    padding: 0 11px;
+    height: 44px;
+    padding: 0 12px;
   }
 
   .nav-item.active .nav-label-wrap {
@@ -368,5 +643,145 @@
 
   .nav-label {
     font-size: 12px;
+  }
+
+  /* Trim the pill to the 4 essential destinations; the rest of the
+     site is still reachable by scrolling. */
+  .nav-item[data-target="#services"],
+  .nav-item[data-target="#toolkit"],
+  .nav-item[data-target="#education"] {
+    display: none;
+  }
+
+  .nav-item .nav-label-full {
+    display: none;
+  }
+
+  .nav-item .nav-label-short {
+    display: inline;
+  }
+}
+
+/* --------------------------------
+   STANDARD PHONES (<=479px)
+-------------------------------- */
+@media (max-width: 479px) {
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .hero-social {
+    gap: 10px;
+  }
+
+  .impact-intro h2 {
+    font-size: 22px;
+  }
+
+  .stat-card {
+    min-height: 118px;
+    padding: 18px var(--mobile-gutter);
+  }
+
+  .stat-card h3 {
+    font-size: clamp(26px, 9vw, 32px);
+  }
+
+  .dock-item img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .dock-tooltip {
+    min-width: 170px;
+    max-width: 200px;
+  }
+
+  .service-card {
+    flex-basis: 84%;
+    padding: 22px 20px;
+  }
+
+  .contact-cards {
+    gap: 14px;
+  }
+
+  .contact-card {
+    flex-basis: 100%;
+    max-width: none;
+    padding: 20px 22px;
+  }
+}
+
+/* --------------------------------
+   SMALL PHONES (<=359px)
+   Last-resort single-column fallback only where two columns would
+   genuinely be too tight to read comfortably.
+-------------------------------- */
+@media (max-width: 359px) {
+  .impact-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    border-bottom: 1px solid var(--line);
+    min-height: 0;
+  }
+
+  .impact-panel .stat-card:nth-child(2),
+  .impact-panel .stat-card:nth-child(3),
+  .impact-panel .stat-card:nth-child(4),
+  .impact-panel .stat-card:nth-child(5) {
+    border-right: none;
+  }
+
+  .impact-panel .stat-card:nth-child(5) {
+    border-bottom: none;
+  }
+
+  .hero-cta {
+    max-width: none;
+  }
+
+  .cta-button,
+  .cta-button-outline {
+    flex-basis: 100%;
+  }
+}
+
+/* --------------------------------
+   MOBILE LANDSCAPE
+   Short, wide viewports (phones rotated) need the hero to shed
+   weight rather than fight for vertical space.
+-------------------------------- */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+  .hero {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .site-header {
+    padding-top: max(10px, env(safe-area-inset-top));
+  }
+
+  .hero-content {
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .hero-copy .hero-description {
+    display: none;
+  }
+
+  .hero-social {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  .dynamic-nav {
+    bottom: calc(10px + env(safe-area-inset-bottom));
   }
 }

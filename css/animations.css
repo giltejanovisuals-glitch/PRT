@@ -9,6 +9,30 @@
 ================================ */
 
 /* --------------------------------
+   GLOBAL REDUCED-MOTION CATCH-ALL
+   The component-specific overrides below (hero entrance, dock,
+   timeline, contact, etc.) already disable their own transitions -
+   this is a blanket safety net for anything not explicitly listed
+   (marquee, nav pill, card hovers, JS-driven inline transforms) so
+   nothing is missed. Kept short so the site stays functional: things
+   still change state, they just stop animating the change.
+-------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------
    GENERIC SCROLL-REVEAL (fade-up)
    Used by revealOnScroll() in script.js for the smaller supporting
    cards that don't need a bespoke story.
