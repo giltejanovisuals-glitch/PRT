@@ -9,8 +9,9 @@
     name="description"
     content="Gil Tejano is a Creative Specialist / Graphic Designer crafting premium product visuals, retail campaign materials, and brand-consistent designs for lifestyle and interior brands."
   />
+  <!-- Replace with your real domain once it's live -->
   <link rel="canonical" href="https://giltejano.netlify.app/" />
-  <meta name="theme-color" content="#050505" />
+  <meta name="theme-color" content="#1f6f68" />
 
   <!-- Open Graph / Social -->
   <meta property="og:type" content="website" />
@@ -19,17 +20,27 @@
     property="og:description"
     content="Premium product visuals, retail campaign materials, and brand-consistent designs for lifestyle and interior brands."
   />
+  <!-- Replace with your real domain once it's live -->
   <meta property="og:url" content="https://giltejano.netlify.app/" />
-  <meta name="twitter:card" content="summary" />
+  <!-- Placeholder social preview image - add a real 1200x630 image at this path -->
+  <meta property="og:image" content="https://giltejano.netlify.app/assets/images/profile/gil-tejano.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gil Tejano | Creative Specialist Portfolio" />
+  <meta name="twitter:description" content="Premium product visuals, retail campaign materials, and brand-consistent designs for lifestyle and interior brands." />
+  <meta name="twitter:image" content="https://giltejano.netlify.app/assets/images/profile/gil-tejano.webp" />
 
   <!-- Favicon -->
   <link
     rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23050505'/%3E%3Ctext x='50' y='68' font-family='Arial,sans-serif' font-size='60' font-weight='900' fill='%23c6ff2e' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E"
   />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="manifest" href="site.webmanifest" />
 
   <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -54,9 +65,25 @@
     <!-- HERO SECTION -->
     <section class="hero" id="home">
       <div class="hero-bg" aria-hidden="true">
-        <video class="hero-bg-video" autoplay muted loop playsinline preload="auto">
-          <source src="vid/bg-portrait.mp4" media="(max-width: 900px)" type="video/mp4" />
-          <source src="vid/bg.mp4" type="video/mp4" />
+        <!--
+          Above-the-fold hero media: keep this eager-loaded (no
+          loading="lazy" on the poster/video) so the first paint isn't
+          delayed. Add a real poster at assets/images/backgrounds/hero-background.webp
+          (shows instantly while the video buffers) and, optionally, a
+          portrait-cropped clip for small screens.
+        -->
+        <video
+          class="hero-bg-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          poster="assets/images/backgrounds/hero-background.webp"
+        >
+          <!-- Optional: add a portrait crop and re-enable this source for small screens -->
+          <!-- <source src="assets/videos/hero-showreel-portrait.mp4" media="(max-width: 900px)" type="video/mp4" /> -->
+          <source src="assets/videos/hero-showreel.mp4" type="video/mp4" />
         </video>
       </div>
 
@@ -100,12 +127,15 @@
       </div>
 
       <div class="hero-social">
+        <!-- Replace with your real email address -->
         <a href="mailto:hello@giltejano.com" aria-label="Email">
           <i class="fa-solid fa-envelope" aria-hidden="true"></i>
         </a>
+        <!-- Replace href with your LinkedIn profile URL -->
         <a href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
           <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
         </a>
+        <!-- Replace href with your Behance profile URL -->
         <a href="#" target="_blank" rel="noopener" aria-label="Behance">
           <i class="fa-brands fa-behance" aria-hidden="true"></i>
         </a>
@@ -160,7 +190,14 @@
       </div>
     </section>
 
-    <!-- SELECTED PROJECTS -->
+    <!-- SELECTED PROJECTS
+         These 4 cards are the no-JS / fetch-failed fallback (also what
+         renders if you open index.html straight from disk, since
+         fetch() is blocked on file://). When the site is served over
+         http(s), js/projects.js overwrites this markup with cards
+         built from data/projects.json - edit that file to add, remove,
+         or reorder projects, and update the cards below to match so
+         the fallback stays in sync. -->
     <section class="projects-section" id="projects">
       <div class="section-heading">
         <h2>
@@ -177,7 +214,8 @@
       <div class="project-grid">
         <article class="project-card">
           <div class="artboard">
-            <img src="images/project-01.svg" alt="Premium product visual design" width="400" height="310" loading="lazy" />
+            <!-- Replace with assets/images/projects/mooni-campaign.webp -->
+            <img src="assets/images/projects/project-visual-01.svg" alt="Mooni brand campaign product photography and layout design" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
             <span class="artboard-expand" aria-hidden="true">
@@ -187,8 +225,8 @@
             <div class="project-info">
               <span>01</span>
               <div>
-                <h3>Premium Product Visuals</h3>
-                <p>Product Campaign Design</p>
+                <h3>Mooni Campaign Visuals</h3>
+                <p>Premium Product Visuals</p>
               </div>
             </div>
           </div>
@@ -196,7 +234,8 @@
 
         <article class="project-card">
           <div class="artboard">
-            <img src="images/project-02.svg" alt="Retail campaign design" width="400" height="310" loading="lazy" />
+            <!-- Replace with assets/images/projects/metal-lite-campaign.webp -->
+            <img src="assets/images/projects/project-visual-02.svg" alt="Metal-Lite retail campaign marketing collateral" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
             <span class="artboard-expand" aria-hidden="true">
@@ -206,8 +245,8 @@
             <div class="project-info">
               <span>02</span>
               <div>
-                <h3>Retail Campaign Materials</h3>
-                <p>Marketing Collateral</p>
+                <h3>Metal-Lite Retail Campaign</h3>
+                <p>Retail Campaign Materials</p>
               </div>
             </div>
           </div>
@@ -215,7 +254,8 @@
 
         <article class="project-card">
           <div class="artboard">
-            <img src="images/project-03.svg" alt="Catalog layout design" width="400" height="310" loading="lazy" />
+            <!-- Replace with assets/images/projects/hooga-campaign.webp -->
+            <img src="assets/images/projects/project-visual-03.svg" alt="Hooga catalog layout and print editorial design" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
             <span class="artboard-expand" aria-hidden="true">
@@ -225,8 +265,8 @@
             <div class="project-info">
               <span>03</span>
               <div>
-                <h3>Catalog Layout System</h3>
-                <p>Print & Editorial Design</p>
+                <h3>Hooga Catalog System</h3>
+                <p>Print &amp; Editorial Design</p>
               </div>
             </div>
           </div>
@@ -234,7 +274,8 @@
 
         <article class="project-card">
           <div class="artboard">
-            <img src="images/project-04.svg" alt="Brand consistent social media design" width="400" height="310" loading="lazy" />
+            <!-- Replace with assets/images/projects/brand-social-assets.webp -->
+            <img src="assets/images/projects/project-visual-04.svg" alt="Brand-consistent social media graphics for a lifestyle brand" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
             <span class="artboard-expand" aria-hidden="true">
@@ -406,8 +447,7 @@
               <h4>Adobe Photoshop</h4>
               <p>Photo manipulation, product retouching, and layered compositions for premium campaign visuals.</p>
             </div>
-            <!-- Replace with your own Photoshop icon -->
-            <img src="images/toolkit/photoshop.svg" alt="Adobe Photoshop" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/photoshop.svg" alt="Adobe Photoshop" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -415,8 +455,7 @@
               <h4>Adobe Illustrator</h4>
               <p>Vector logos, icons, and scalable artwork for branding and print-ready layouts.</p>
             </div>
-            <!-- Replace with your own Illustrator icon -->
-            <img src="images/toolkit/illustrator.svg" alt="Adobe Illustrator" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/illustrator.svg" alt="Adobe Illustrator" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -424,8 +463,7 @@
               <h4>Adobe Lightroom</h4>
               <p>Color grading and batch photo editing for consistent, polished product photography.</p>
             </div>
-            <!-- Replace with your own Lightroom icon -->
-            <img src="images/toolkit/lightroom.svg" alt="Adobe Lightroom" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/lightroom.svg" alt="Adobe Lightroom" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -433,8 +471,7 @@
               <h4>Affinity</h4>
               <p>Fast raster and vector editing for layouts, retouching, and quick mockups.</p>
             </div>
-            <!-- Replace with your own Affinity icon -->
-            <img src="images/toolkit/affinity.svg" alt="Affinity" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/affinity.svg" alt="Affinity" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -442,8 +479,7 @@
               <h4>SketchUp</h4>
               <p>3D modeling for product mockups, showroom layouts, and spatial visualization.</p>
             </div>
-            <!-- Replace with your own SketchUp icon -->
-            <img src="images/toolkit/sketchup.svg" alt="SketchUp" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/sketchup.svg" alt="SketchUp" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -451,8 +487,7 @@
               <h4>Canva</h4>
               <p>Fast social media graphics and templates for quick-turnaround marketing assets.</p>
             </div>
-            <!-- Replace with your own Canva icon -->
-            <img src="images/toolkit/canva.svg" alt="Canva" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/canva.svg" alt="Canva" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -460,8 +495,7 @@
               <h4>CapCut</h4>
               <p>Short-form video editing for reels, social ads, and event recap content.</p>
             </div>
-            <!-- Replace with your own CapCut icon -->
-            <img src="images/toolkit/capcut.svg" alt="CapCut" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/capcut.svg" alt="CapCut" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -469,8 +503,7 @@
               <h4>DaVinci Resolve</h4>
               <p>Professional video editing and color grading for campaign and event videos.</p>
             </div>
-            <!-- Replace with your own DaVinci Resolve icon -->
-            <img src="images/toolkit/davinci-resolve.svg" alt="DaVinci Resolve" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/davinci-resolve.svg" alt="DaVinci Resolve" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -478,8 +511,7 @@
               <h4>Visual Studio Code</h4>
               <p>Code editor for building and maintaining this portfolio site and other web projects.</p>
             </div>
-            <!-- Replace with your own VS Code icon -->
-            <img src="images/toolkit/vscode.svg" alt="Visual Studio Code" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/vscode.svg" alt="Visual Studio Code" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -487,8 +519,7 @@
               <h4>Microsoft PowerPoint</h4>
               <p>Sales presentations and pitch decks for client and stakeholder meetings.</p>
             </div>
-            <!-- Replace with your own PowerPoint icon -->
-            <img src="images/toolkit/powerpoint.svg" alt="Microsoft PowerPoint" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/powerpoint.svg" alt="Microsoft PowerPoint" width="64" height="64" loading="lazy" />
           </li>
 
           <li class="dock-item">
@@ -496,8 +527,7 @@
               <h4>Microsoft Office / Google Workspace</h4>
               <p>Documents, spreadsheets, and shared files for project coordination and reporting.</p>
             </div>
-            <!-- Replace with your own Office/Workspace icon -->
-            <img src="images/toolkit/workspace.svg" alt="Microsoft Office and Google Workspace" width="64" height="64" loading="lazy" />
+            <img src="assets/icons/workspace.svg" alt="Microsoft Office and Google Workspace" width="64" height="64" loading="lazy" />
           </li>
         </ul>
 
@@ -567,7 +597,7 @@
         </p>
 
         <div class="client-info">
-          <img src="images/client.svg" alt="Client portrait" width="108" height="108" loading="lazy" />
+          <img src="assets/images/thumbnails/client-portrait.svg" alt="Portrait of the creative partner giving this testimonial" width="108" height="108" loading="lazy" />
 
           <div>
             <h3>Creative Partner</h3>
@@ -581,7 +611,7 @@
       </div>
 
       <div class="image-card section-border">
-        <img src="images/detail-shot.svg" alt="Abstract premium visual detail" width="400" height="410" loading="lazy" />
+        <img src="assets/images/projects/detail-shot.svg" alt="Close-up detail shot from a premium product visual" width="400" height="410" loading="lazy" />
       </div>
     </section>
 
@@ -591,27 +621,27 @@
 
       <div class="marquee">
         <div class="marquee-track">
-          <img src="images/brands/etro.svg" alt="Etro" loading="lazy" />
-          <img src="images/brands/stoneleaf.svg" alt="Stoneleaf" loading="lazy" />
-          <img src="images/brands/hooga.svg" alt="Hooga" loading="lazy" />
-          <img src="images/brands/mooni.svg" alt="Mooni" loading="lazy" />
-          <img src="images/brands/bw.svg" alt="BW Group" loading="lazy" />
-          <img src="images/brands/dp.svg" alt="Dunlopillo" loading="lazy" />
-          <img src="images/brands/mim.svg" alt="Metal-Lite" loading="lazy" />
-          <img src="images/brands/porta.svg" alt="Porta Mobili" loading="lazy" />
-          <img src="images/brands/rif.svg" alt="Riflessi" loading="lazy" />
-          <img src="images/brands/tisettanta.svg" alt="Tisettanta" loading="lazy" />
+          <img src="assets/images/logos/etro.svg" alt="Etro" loading="lazy" />
+          <img src="assets/images/logos/stoneleaf.svg" alt="Stoneleaf" loading="lazy" />
+          <img src="assets/images/logos/hooga.svg" alt="Hooga" loading="lazy" />
+          <img src="assets/images/logos/mooni.svg" alt="Mooni" loading="lazy" />
+          <img src="assets/images/logos/bw-group.svg" alt="BW Group" loading="lazy" />
+          <img src="assets/images/logos/dunlopillo.svg" alt="Dunlopillo" loading="lazy" />
+          <img src="assets/images/logos/metal-lite.svg" alt="Metal-Lite" loading="lazy" />
+          <img src="assets/images/logos/porta-mobili.svg" alt="Porta Mobili" loading="lazy" />
+          <img src="assets/images/logos/riflessi.svg" alt="Riflessi" loading="lazy" />
+          <img src="assets/images/logos/tisettanta.svg" alt="Tisettanta" loading="lazy" />
 
-          <img src="images/brands/etro.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/stoneleaf.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/hooga.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/mooni.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/bw.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/dp.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/mim.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/porta.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/rif.svg" alt="" loading="lazy" aria-hidden="true" />
-          <img src="images/brands/tisettanta.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/etro.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/stoneleaf.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/hooga.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/mooni.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/bw-group.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/dunlopillo.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/metal-lite.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/porta-mobili.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/riflessi.svg" alt="" loading="lazy" aria-hidden="true" />
+          <img src="assets/images/logos/tisettanta.svg" alt="" loading="lazy" aria-hidden="true" />
         </div>
       </div>
     </section>
@@ -679,12 +709,14 @@
         </div>
 
         <div class="contact-actions">
+          <!-- Replace with your real email address -->
           <a href="mailto:hello@giltejano.com" class="cta-button">
             Start Project
             <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </a>
 
-          <a href="gil-tejano-cv.pdf" class="cta-button-outline" download>
+          <!-- Download CV: keep the real PDF at assets/documents/gil-tejano-cv.pdf -->
+          <a href="assets/documents/gil-tejano-cv.pdf" class="cta-button-outline" download>
             Download CV
           </a>
 
@@ -697,6 +729,7 @@
       <div class="contact-cards">
         <div class="contact-card">
           <span class="contact-card-label">Email</span>
+          <!-- Replace with your real email address -->
           <h3><a href="mailto:hello@giltejano.com">hello@giltejano.com</a></h3>
         </div>
 
@@ -754,6 +787,7 @@
   </nav>
 
   <!-- JS -->
-  <script src="script.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>

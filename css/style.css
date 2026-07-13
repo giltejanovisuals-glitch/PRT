@@ -1,4 +1,4 @@
-/* ================================
+﻿/* ================================
    GLOBAL RESET
 ================================ */
 * {
@@ -37,7 +37,7 @@ body {
 *,
 *::before,
 *::after {
-  cursor: url("images/cursor.svg") 3 3, auto !important;
+  cursor: url("../assets/icons/cursor.svg") 3 3, auto !important;
 }
 
 img {
@@ -400,90 +400,6 @@ a {
   font-style: normal;
 }
 
-/* Hero elements float into place. ".story-armed" is only ever added by
-   JS, so without JS these render in their final, visible state. */
-.hero.story-armed .hero-copy .eyebrow,
-.hero.story-armed .hero-copy h1,
-.hero.story-armed .hero-copy .hero-description,
-.hero.story-armed .hero-copy .hero-cta,
-.hero.story-armed .hero-social,
-.hero.story-armed .hero-roles,
-.hero.story-armed .hero-index {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hero.story-armed .hero-copy .hero-divider {
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.hero.story-armed .hero-social {
-  transform: translate(-18px, 10px);
-}
-
-.hero.story-armed .hero-roles,
-.hero.story-armed .hero-index {
-  transform: translate(18px, 10px);
-}
-
-.hero.story-armed.is-revealed .hero-copy .eyebrow,
-.hero.story-armed.is-revealed .hero-copy h1,
-.hero.story-armed.is-revealed .hero-copy .hero-description,
-.hero.story-armed.is-revealed .hero-copy .hero-cta,
-.hero.story-armed.is-revealed .hero-social,
-.hero.story-armed.is-revealed .hero-roles,
-.hero.story-armed.is-revealed .hero-index {
-  opacity: 1;
-  transform: translate(0, 0);
-}
-
-.hero.story-armed.is-revealed .hero-copy .hero-divider {
-  transform: scaleX(1);
-}
-
-.hero.story-armed.is-revealed .hero-copy .eyebrow {
-  transition-delay: 0.05s;
-}
-
-.hero.story-armed.is-revealed .hero-copy h1 {
-  transition-delay: 0.15s;
-}
-
-.hero.story-armed.is-revealed .hero-copy .hero-divider {
-  transition-delay: 0.38s;
-}
-
-.hero.story-armed.is-revealed .hero-copy .hero-description {
-  transition-delay: 0.44s;
-}
-
-.hero.story-armed.is-revealed .hero-copy .hero-cta {
-  transition-delay: 0.58s;
-}
-
-.hero.story-armed.is-revealed .hero-social,
-.hero.story-armed.is-revealed .hero-roles,
-.hero.story-armed.is-revealed .hero-index {
-  transition-delay: 0.7s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero.story-armed .hero-copy .eyebrow,
-  .hero.story-armed .hero-copy h1,
-  .hero.story-armed .hero-copy .hero-divider,
-  .hero.story-armed .hero-copy .hero-description,
-  .hero.story-armed .hero-copy .hero-cta,
-  .hero.story-armed .hero-social,
-  .hero.story-armed .hero-roles,
-  .hero.story-armed .hero-index {
-    transition: none;
-  }
-}
-
 /* ================================
    IMPACT / STATS
 ================================ */
@@ -645,20 +561,6 @@ a {
     opacity 0.5s ease;
 }
 
-/* Project boards start piled together and fly apart into the bento
-   layout as the section scrolls into view - a stack unstacking. */
-.project-grid.story-armed .project-card .artboard {
-  opacity: 0;
-  transform: translate(var(--stack-x, 0), var(--stack-y, 0)) scale(0.82)
-    rotate(var(--stack-rot, 0deg));
-}
-
-.project-grid.story-armed.is-revealed .project-card .artboard {
-  opacity: 1;
-  transform: rotate(var(--tilt, 0deg));
-  transition-delay: var(--stack-delay, 0s);
-}
-
 /* Stacked "sheets" peeking out behind the front artboard */
 .artboard::before,
 .artboard::after {
@@ -795,19 +697,6 @@ a {
   text-transform: uppercase;
 }
 
-/* Bigger type for card 1 only applies where it's actually the large
-   featured board (the bento grid above 900px) - at narrower widths
-   every card is the same size again. */
-@media (min-width: 901px) {
-  .project-card:nth-child(1) .project-info span {
-    font-size: 36px;
-  }
-
-  .project-card:nth-child(1) .project-info h3 {
-    font-size: 20px;
-  }
-}
-
 /* The two small bottom-right boards are too narrow for the number
    and title to sit side by side, so stack them instead. */
 .project-card:nth-child(3) .project-info,
@@ -835,16 +724,6 @@ a {
 .project-card:nth-child(3) .project-info p,
 .project-card:nth-child(4) .project-info p {
   font-size: 10px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .artboard,
-  .artboard::before,
-  .artboard::after,
-  .artboard img,
-  .artboard-expand {
-    transition: none;
-  }
 }
 
 /* ================================
@@ -967,43 +846,6 @@ a {
   line-height: 1.55;
 }
 
-/* Each card reveals like a design-layers panel building up: icon first
-   (base layer), then the heading, then the body copy settle on top. */
-.service-card.reveal i,
-.service-card.reveal h3,
-.service-card.reveal p {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.service-card.reveal.is-visible i,
-.service-card.reveal.is-visible h3,
-.service-card.reveal.is-visible p {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.service-card.reveal.is-visible i {
-  transition-delay: 0.05s;
-}
-
-.service-card.reveal.is-visible h3 {
-  transition-delay: 0.18s;
-}
-
-.service-card.reveal.is-visible p {
-  transition-delay: 0.3s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .service-card.reveal i,
-  .service-card.reveal h3,
-  .service-card.reveal p {
-    transition: none;
-  }
-}
-
 /* ================================
    DAILY TOOLKIT (DOCK)
 ================================ */
@@ -1046,24 +888,6 @@ a {
   transform-origin: bottom center;
   transition: transform 0.18s ease-out;
   will-change: transform;
-}
-
-/* Icons slide up into the dock, staggered left to right (the stagger
-   itself is set inline per item in script.js). Once settled, the
-   transition swaps back to the fast timing the hover-magnify needs. */
-.toolkit-dock.story-armed .dock-item {
-  opacity: 0;
-  transform: translateY(26px) scale(0.7);
-  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.toolkit-dock.story-armed.is-revealed .dock-item {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-}
-
-.toolkit-dock.story-armed.story-settled .dock-item {
-  transition: transform 0.18s ease-out;
 }
 
 .dock-item img {
@@ -1113,14 +937,6 @@ a {
   border-top-color: var(--panel);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .dock-item:hover .dock-tooltip,
-  .dock-item:focus-within .dock-tooltip {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-}
-
 .dock-tooltip h4 {
   font-size: 12px;
   letter-spacing: 0.4px;
@@ -1132,12 +948,6 @@ a {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.5;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dock-item {
-    transition: none;
-  }
 }
 
 /* Shared caption for touch devices: an above-icon tooltip would get
@@ -1165,47 +975,6 @@ a {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.5;
-}
-
-@media (hover: none), (pointer: coarse) {
-  .toolkit-active-caption {
-    display: block;
-  }
-}
-
-@media (max-width: 900px) {
-  .toolkit-dock {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 22px 40vw 14px;
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 24px,
-      #000 calc(100% - 24px),
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 24px,
-      #000 calc(100% - 24px),
-      transparent 100%
-    );
-  }
-
-  .toolkit-dock::-webkit-scrollbar {
-    display: none;
-  }
-
-  .dock-item {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
-  }
 }
 
 /* ================================
@@ -1298,87 +1067,6 @@ a {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.5;
-}
-
-/* The timeline appears like a scrubbing playhead: the connecting line
-   draws left to right, and each marker pops as the "playhead" reaches
-   it, with its label following right after. */
-.experience-section.story-armed .timeline-h::before {
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.experience-section.story-armed.is-revealed .timeline-h::before {
-  transform: scaleX(1);
-}
-
-.experience-section.story-armed .timeline-h-item::before {
-  transform: scale(0);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item::before {
-  transform: scale(1);
-}
-
-.experience-section.story-armed .timeline-h-item > * {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item > * {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(1)::before {
-  transition-delay: 0.15s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(1) > * {
-  transition-delay: 0.25s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(2)::before {
-  transition-delay: 0.3s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(2) > * {
-  transition-delay: 0.4s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(3)::before {
-  transition-delay: 0.45s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(3) > * {
-  transition-delay: 0.55s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(4)::before {
-  transition-delay: 0.6s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(4) > * {
-  transition-delay: 0.7s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(5)::before {
-  transition-delay: 0.75s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(5) > * {
-  transition-delay: 0.85s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(6)::before {
-  transition-delay: 0.9s;
-}
-
-.experience-section.story-armed.is-revealed .timeline-h-item:nth-child(6) > * {
-  transition-delay: 1s;
 }
 
 /* ================================
@@ -1564,18 +1252,6 @@ a {
   );
 }
 
-.marquee-track {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  gap: 64px;
-  animation: marquee-scroll 28s linear infinite;
-}
-
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-
 .marquee-track img {
   width: auto;
   height: 28px;
@@ -1588,22 +1264,6 @@ a {
 
 .marquee-track img:hover {
   opacity: 0.9;
-}
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
 }
 
 /* ================================
@@ -1733,35 +1393,6 @@ a {
   flex-shrink: 0;
 }
 
-.export-status-dot::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: var(--accent-light);
-  opacity: 0.4;
-  animation: statusPulse 1.8s ease-out infinite;
-}
-
-@keyframes statusPulse {
-  0% {
-    transform: scale(0.6);
-    opacity: 0.45;
-  }
-
-  100% {
-    transform: scale(1.9);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .export-status-dot::after {
-    animation: none;
-    opacity: 0;
-  }
-}
-
 .export-panel .contact-actions {
   justify-content: flex-start;
   padding: 20px 22px;
@@ -1883,68 +1514,6 @@ a {
   color: var(--accent-light);
 }
 
-/* The contact section reveals like an export/send screen completing:
-   a progress line draws in, content settles in sequence, and the
-   primary button pings once as if it just finished rendering and is
-   ready to send. */
-.contact-section.story-armed .contact-eyebrow,
-.contact-section.story-armed .contact-title,
-.contact-section.story-armed .export-panel,
-.contact-section.story-armed .contact-cards {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.contact-section.story-armed .contact-eyebrow .line {
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.3s;
-}
-
-.contact-section.story-armed.is-revealed .contact-eyebrow,
-.contact-section.story-armed.is-revealed .contact-title,
-.contact-section.story-armed.is-revealed .export-panel,
-.contact-section.story-armed.is-revealed .contact-cards {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.contact-section.story-armed.is-revealed .contact-eyebrow .line {
-  transform: scaleX(1);
-}
-
-.contact-section.story-armed.is-revealed .contact-title {
-  transition-delay: 0.15s;
-}
-
-.contact-section.story-armed.is-revealed .export-panel {
-  transition-delay: 0.3s;
-}
-
-.contact-section.story-armed.is-revealed .contact-cards {
-  transition-delay: 0.45s;
-}
-
-@keyframes exportReadyPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(79, 195, 181, 0.5);
-  }
-
-  70% {
-    box-shadow: 0 0 0 14px rgba(79, 195, 181, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(79, 195, 181, 0);
-  }
-}
-
-.contact-section.story-armed.is-revealed .cta-button {
-  animation: exportReadyPulse 1.2s ease-out 1;
-  animation-delay: 0.6s;
-}
-
 /* ================================
    SITE FOOTER
 ================================ */
@@ -1990,43 +1559,6 @@ a {
 
 .skip-link:focus {
   top: 16px;
-}
-
-/* ================================
-   SCROLL-REVEAL CARDS
-================================ */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ================================
-   CURSOR GLOW
-================================ */
-.cursor-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 280px;
-  height: 280px;
-  margin: -140px 0 0 -140px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(31, 111, 104, 0.28), transparent 70%);
-  pointer-events: none;
-  z-index: 1;
-  mix-blend-mode: screen;
-}
-
-@media (max-width: 900px) {
-  .cursor-glow {
-    display: none;
-  }
 }
 
 /* ================================
@@ -2112,311 +1644,4 @@ a {
   white-space: nowrap;
   font-size: 13px;
   font-weight: 600;
-}
-
-@keyframes navFocusPulse {
-  0% {
-    box-shadow: inset 0 0 0 0 var(--accent-soft);
-  }
-
-  35% {
-    box-shadow: inset 0 0 140px 10px var(--accent-soft);
-  }
-
-  100% {
-    box-shadow: inset 0 0 0 0 var(--accent-soft);
-  }
-}
-
-.nav-target-flash {
-  animation: navFocusPulse 0.9s ease;
-}
-
-/* ================================
-   RESPONSIVE DESIGN
-================================ */
-@media (max-width: 1200px) {
-  .portfolio-page {
-    width: min(100% - 32px, 1100px);
-  }
-
-  .impact-panel {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .impact-intro {
-    grid-column: 1 / -1;
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .education-section {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .services-section {
-    flex-direction: column;
-  }
-
-  .services-section .section-title-small {
-    flex: 0 0 auto;
-    width: 100%;
-  }
-
-  .toolkit-section,
-  .experience-section {
-    grid-template-columns: 1fr;
-  }
-
-  .section-title-small {
-    grid-column: 1 / -1;
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-  }
-}
-
-@media (max-width: 900px) {
-  .site-header {
-    padding: 28px 24px 0;
-  }
-
-  .brand-label .line {
-    width: 90px;
-  }
-
-  .availability {
-    font-size: 10px;
-  }
-
-  .hero {
-    min-height: 700px;
-    margin-top: 0;
-  }
-
-  .hero-content {
-    padding: 20px 24px 34px;
-  }
-
-  .hero-social {
-    left: 24px;
-  }
-
-  .hero-index {
-    right: 10px;
-  }
-
-  .hero-copy {
-    max-width: 100%;
-    padding-top: 70px;
-  }
-
-  .hero h1 {
-    letter-spacing: -2px;
-  }
-
-  .hero-description {
-    margin-top: 24px;
-  }
-
-  .hero-roles {
-    display: none;
-  }
-
-  .impact-panel {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .stat-card:nth-child(3) {
-    border-right: none;
-  }
-
-  .project-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: none;
-    grid-auto-rows: 280px;
-    gap: 38px 28px;
-  }
-
-  .project-card:nth-child(1),
-  .project-card:nth-child(2),
-  .project-card:nth-child(3),
-  .project-card:nth-child(4) {
-    grid-column: auto;
-    grid-row: auto;
-  }
-
-  .testimonial-section {
-    grid-template-columns: 1fr;
-  }
-
-  .testimonial-card {
-    border-bottom: none;
-  }
-
-  .contact-section {
-    padding: 44px 28px;
-  }
-}
-
-@media (max-width: 640px) {
-  .portfolio-page {
-    width: calc(100% - 20px);
-    padding: 10px 0;
-  }
-
-  .site-header {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .brand-label span {
-    font-size: 11px;
-  }
-
-  .contact-title {
-    white-space: normal;
-    font-size: clamp(22px, 6vw, 30px);
-  }
-
-  .hero {
-    min-height: 660px;
-  }
-
-  .hero h1 {
-    font-size: clamp(40px, 15vw, 72px);
-    letter-spacing: -1.5px;
-  }
-
-  .hero h1 span {
-    font-size: clamp(30px, 11vw, 52px);
-  }
-
-  .hero-description {
-    font-size: 14px;
-    margin-top: 18px;
-  }
-
-  .impact-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .impact-intro,
-  .stat-card {
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .stat-card:last-child {
-    border-bottom: none;
-  }
-
-  .section-heading {
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .education-section {
-    grid-template-columns: 1fr;
-  }
-
-  .project-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 260px;
-    gap: 46px 0;
-    padding: 20px 10px 48px;
-  }
-
-  .project-card:nth-child(1) {
-    --tilt: -2deg;
-  }
-
-  .project-card:nth-child(2) {
-    --tilt: 1.5deg;
-  }
-
-  .project-card:nth-child(3) {
-    --tilt: -1.5deg;
-  }
-
-  .project-card:nth-child(4) {
-    --tilt: 2deg;
-  }
-
-  .education-card {
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .dock-item img {
-    width: 52px;
-    height: 52px;
-  }
-
-  .dock-tooltip {
-    min-width: 170px;
-    max-width: 200px;
-  }
-
-  .timeline-h::before {
-    display: none;
-  }
-
-  .timeline-h-item,
-  .timeline-h-item.is-current {
-    flex: 1 1 100%;
-    max-width: none;
-    padding-top: 0;
-    padding-left: 20px;
-  }
-
-  .timeline-h-item::before {
-    top: 5px;
-    left: 0;
-  }
-
-  .service-card {
-    flex-basis: 78vw;
-    padding: 28px 24px;
-  }
-
-  .trusted-strip {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 26px 22px;
-  }
-
-  .marquee {
-    width: 100%;
-  }
-
-  .contact-section {
-    padding: 40px 22px;
-  }
-
-  .site-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 22px;
-    margin-bottom: 54px;
-  }
-
-  .dynamic-nav {
-    bottom: 16px;
-    gap: 4px;
-    padding: 6px;
-  }
-
-  .nav-item {
-    height: 40px;
-    padding: 0 11px;
-  }
-
-  .nav-item.active .nav-label-wrap {
-    margin-left: 6px;
-  }
-
-  .nav-label {
-    font-size: 12px;
-  }
 }

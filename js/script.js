@@ -89,30 +89,39 @@ function scrollStory() {
 
 /* ================================
    PROJECT CARD HOVER MOVEMENT
+   Bound on the grid (event delegation) rather than on each card
+   directly, since js/projects.js may replace the cards after
+   data/projects.json loads - delegation keeps this working no matter
+   when that swap happens.
 ================================ */
 
 function magneticProjectCards() {
-  const cards = document.querySelectorAll(".project-card");
+  const grid = document.querySelector(".project-grid");
+  if (!grid) return;
 
-  cards.forEach((card) => {
-    card.addEventListener("mousemove", (event) => {
-      const cardRect = card.getBoundingClientRect();
+  grid.addEventListener("mousemove", (event) => {
+    const card = event.target.closest(".project-card");
+    if (!card) return;
 
-      const x = event.clientX - cardRect.left;
-      const y = event.clientY - cardRect.top;
+    const cardRect = card.getBoundingClientRect();
 
-      const centerX = cardRect.width / 2;
-      const centerY = cardRect.height / 2;
+    const x = event.clientX - cardRect.left;
+    const y = event.clientY - cardRect.top;
 
-      const rotateX = ((y - centerY) / centerY) * -4;
-      const rotateY = ((x - centerX) / centerX) * 4;
+    const centerX = cardRect.width / 2;
+    const centerY = cardRect.height / 2;
 
-      card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
+    const rotateX = ((y - centerY) / centerY) * -4;
+    const rotateY = ((x - centerX) / centerX) * 4;
 
-    card.addEventListener("mouseleave", () => {
-      card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg)";
-    });
+    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
+
+  grid.addEventListener("mouseout", (event) => {
+    const card = event.target.closest(".project-card");
+    if (!card || card.contains(event.relatedTarget)) return;
+
+    card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg)";
   });
 }
 

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "mooni-campaign",
+    "number": "01",
+    "title": "Mooni Campaign Visuals",
+    "category": "Premium Product Visuals",
+    "image": "assets/images/projects/mooni-campaign.webp",
+    "alt": "Mooni brand campaign product photography and layout design"
+  },
+  {
+    "id": "metal-lite-campaign",
+    "number": "02",
+    "title": "Metal-Lite Retail Campaign",
+    "category": "Retail Campaign Materials",
+    "image": "assets/images/projects/metal-lite-campaign.webp",
+    "alt": "Metal-Lite retail campaign marketing collateral"
+  },
+  {
+    "id": "hooga-campaign",
+    "number": "03",
+    "title": "Hooga Catalog System",
+    "category": "Print & Editorial Design",
+    "image": "assets/images/projects/hooga-campaign.webp",
+    "alt": "Hooga catalog layout and print editorial design"
+  },
+  {
+    "id": "brand-social-assets",
+    "number": "04",
+    "title": "Brand Social Assets",
+    "category": "Digital Design",
+    "image": "assets/images/projects/brand-social-assets.webp",
+    "alt": "Brand-consistent social media graphics for a lifestyle brand"
+  }
+]
