@@ -238,7 +238,8 @@ span {
   max-width: 1600px;
   margin: 0 auto;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   padding: 20px 40px 40px;
 }
 
@@ -246,6 +247,8 @@ span {
   position: relative;
   max-width: 620px;
   padding-bottom: 30px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .eyebrow {
@@ -285,18 +288,17 @@ span {
 .hero-divider {
   width: 64px;
   height: 2px;
-  margin-top: 24px;
+  margin: 24px auto 0;
   background: var(--accent-light);
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
 }
 
 .hero-description {
   max-width: 430px;
+  margin: 24px auto 30px;
   color: #d8d8d8;
   font-size: 17px;
   line-height: 1.5;
-  margin-top: 24px;
-  margin-bottom: 30px;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.95);
 }
 
