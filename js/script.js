@@ -106,9 +106,8 @@ function scrollStory() {
 /* ================================
    PROJECT CARD HOVER MOVEMENT (desktop / fine pointer only)
    Bound on the grid (event delegation) rather than on each card
-   directly, since js/projects.js may replace the cards after
-   data/projects.json loads - delegation keeps this working no matter
-   when that swap happens.
+   directly, since js/projects.js replaces the cards at load time -
+   delegation keeps this working no matter when that swap happens.
 ================================ */
 
 function magneticProjectCards() {

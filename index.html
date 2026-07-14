@@ -162,13 +162,11 @@
     </section>
 
     <!-- SELECTED PROJECTS
-         These 4 cards are the no-JS / fetch-failed fallback (also what
-         renders if you open index.html straight from disk, since
-         fetch() is blocked on file://). When the site is served over
-         http(s), js/projects.js overwrites this markup with cards
-         built from data/projects.json - edit that file to add, remove,
-         or reorder projects, and update the cards below to match so
-         the fallback stays in sync. -->
+         These 4 cards are the no-JS fallback. With JS enabled,
+         js/projects.js overwrites this markup with cards built from
+         data/projects-data.js - edit that file to add, remove, or
+         reorder projects, and update the cards below to match so the
+         fallback stays in sync. -->
     <section class="projects-section" id="projects">
       <div class="section-heading">
         <h2>
@@ -184,8 +182,8 @@
 
       <div class="project-grid">
         <article class="project-card">
-          <div class="artboard">
-            <!-- Replace with assets/images/projects/mooni-campaign.webp -->
+          <a class="artboard" href="pages/project-mooni-campaign.html" aria-label="View project: Mooni Campaign Visuals">
+            <!-- Replace with assets/images/projects/mooni-campaign.webp (update the matching entry in data/projects-data.js too) -->
             <img src="assets/images/projects/project-visual-01.svg" alt="Mooni brand campaign product photography and layout design" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
@@ -200,12 +198,12 @@
                 <p>Premium Product Visuals</p>
               </div>
             </div>
-          </div>
+          </a>
         </article>
 
         <article class="project-card">
-          <div class="artboard">
-            <!-- Replace with assets/images/projects/metal-lite-campaign.webp -->
+          <a class="artboard" href="pages/project.html?id=metal-lite-campaign" aria-label="View project: Metal-Lite Retail Campaign">
+            <!-- Replace with assets/images/projects/metal-lite-campaign.webp (update the matching entry in data/projects-data.js too) -->
             <img src="assets/images/projects/project-visual-02.svg" alt="Metal-Lite retail campaign marketing collateral" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
@@ -220,12 +218,12 @@
                 <p>Retail Campaign Materials</p>
               </div>
             </div>
-          </div>
+          </a>
         </article>
 
         <article class="project-card">
-          <div class="artboard">
-            <!-- Replace with assets/images/projects/hooga-campaign.webp -->
+          <a class="artboard" href="pages/project.html?id=hooga-campaign" aria-label="View project: Hooga Catalog System">
+            <!-- Replace with assets/images/projects/hooga-campaign.webp (update the matching entry in data/projects-data.js too) -->
             <img src="assets/images/projects/project-visual-03.svg" alt="Hooga catalog layout and print editorial design" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
@@ -240,12 +238,12 @@
                 <p>Print &amp; Editorial Design</p>
               </div>
             </div>
-          </div>
+          </a>
         </article>
 
         <article class="project-card">
-          <div class="artboard">
-            <!-- Replace with assets/images/projects/brand-social-assets.webp -->
+          <a class="artboard" href="pages/project.html?id=brand-social-assets" aria-label="View project: Brand Social Assets">
+            <!-- Replace with assets/images/projects/brand-social-assets.webp (update the matching entry in data/projects-data.js too) -->
             <img src="assets/images/projects/project-visual-04.svg" alt="Brand-consistent social media graphics for a lifestyle brand" width="400" height="310" loading="lazy" />
             <span class="artboard-shade" aria-hidden="true"></span>
             <span class="artboard-pin" aria-hidden="true"></span>
@@ -260,7 +258,7 @@
                 <p>Digital Design</p>
               </div>
             </div>
-          </div>
+          </a>
         </article>
       </div>
     </section>
@@ -766,6 +764,7 @@
   </nav>
 
   <!-- JS -->
+  <script src="data/projects-data.js"></script>
   <script src="js/projects.js"></script>
   <script src="js/script.js"></script>
 </body>

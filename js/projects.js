@@ -1,45 +1,31 @@
 /* ================================
    PROJECT CARDS LOADER
    Replaces the static project-grid markup in index.html with cards
-   built from data/projects.json, so updating that one file updates
-   the whole "Creative Boards" section - no HTML editing required.
+   built from data/projects-data.js (window.PROJECTS_DATA), so editing
+   that one file updates the whole "Creative Boards" section - no HTML
+   editing required.
 
-   If the fetch fails (most commonly because the site was opened
-   directly from disk, where browsers block fetch() on the file://
-   protocol) the static cards already in index.html are left exactly
-   as they are, so the section never breaks or goes blank.
+   If that data isn't available for any reason, the static cards
+   already written into index.html are left exactly as they are, so
+   the section never breaks or goes blank.
 ================================ */
 
-async function loadProjects() {
+function loadProjects() {
   const grid = document.querySelector(".project-grid");
   if (!grid) return;
 
-  let projects;
-
-  try {
-    const response = await fetch("data/projects.json");
-    if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-    projects = await response.json();
-  } catch (error) {
-    console.warn(
-      "projects.js: could not load data/projects.json, keeping the static project cards. " +
-        "(This is expected if you opened index.html directly - run a local server instead. See README.md.)",
-      error
-    );
-    return;
-  }
-
+  const projects = window.PROJECTS_DATA;
   if (!Array.isArray(projects) || projects.length === 0) return;
 
   grid.innerHTML = projects.map(buildProjectCard).join("");
 }
 
 function buildProjectCard(project) {
-  const { number, title, category, image, alt } = project;
+  const { number, title, category, image, alt, overviewUrl } = project;
 
   return `
     <article class="project-card">
-      <div class="artboard">
+      <a class="artboard" href="${overviewUrl}" aria-label="View project: ${title}">
         <img src="${image}" alt="${alt}" width="400" height="310" loading="lazy" />
         <span class="artboard-shade" aria-hidden="true"></span>
         <span class="artboard-pin" aria-hidden="true"></span>
@@ -54,7 +40,7 @@ function buildProjectCard(project) {
             <p>${category}</p>
           </div>
         </div>
-      </div>
+      </a>
     </article>
   `;
 }
