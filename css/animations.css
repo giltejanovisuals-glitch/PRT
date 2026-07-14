@@ -134,28 +134,31 @@
 }
 
 /* --------------------------------
-   PROJECT BOARDS - stack unstacking
-   Boards start piled together and fly apart into the bento layout as
-   the section scrolls into view.
+   PROJECT FOLDERS - settle in
+   Folders fade and rise into place, staggered left to right, as the
+   section scrolls into view.
 -------------------------------- */
-.project-grid.story-armed .project-card .artboard {
+.project-grid.story-armed .project-card .folder {
   opacity: 0;
-  transform: translate(var(--stack-x, 0), var(--stack-y, 0)) scale(0.82)
-    rotate(var(--stack-rot, 0deg));
+  transform: translateY(32px) scale(0.96);
 }
 
-.project-grid.story-armed.is-revealed .project-card .artboard {
+.project-grid.story-armed.is-revealed .project-card .folder {
   opacity: 1;
-  transform: rotate(var(--tilt, 0deg));
+  transform: translateY(0) scale(1);
   transition-delay: var(--stack-delay, 0s);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .artboard,
-  .artboard::before,
-  .artboard::after,
-  .artboard img,
-  .artboard-expand {
+  .folder,
+  .folder-glow,
+  .folder-back,
+  .folder-tab,
+  .folder-front,
+  .folder-preview img,
+  .folder-arrow,
+  .folder-text h3,
+  .folder-text p {
     transition: none;
   }
 }

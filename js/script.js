@@ -3,9 +3,9 @@
 ================================ */
 
 /* Shared input-capability check: desktop-only effects (custom cursor
-   glow, magnetic cards, dock magnification) only make sense with a
-   real mouse. Touch devices - including touch laptops - skip them
-   entirely rather than just hiding their output with CSS. */
+   glow, dock magnification) only make sense with a real mouse. Touch
+   devices - including touch laptops - skip them entirely rather than
+   just hiding their output with CSS. */
 const supportsFinePointer = window.matchMedia(
   "(hover: hover) and (pointer: fine)"
 ).matches;
@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
   smoothAnchorScroll();
 
   if (supportsFinePointer) {
-    magneticProjectCards();
     cursorGlow();
   }
 });
@@ -101,43 +100,6 @@ function scrollStory() {
   );
 
   targets.forEach((target) => storyObserver.observe(target));
-}
-
-/* ================================
-   PROJECT CARD HOVER MOVEMENT (desktop / fine pointer only)
-   Bound on the grid (event delegation) rather than on each card
-   directly, since js/projects.js replaces the cards at load time -
-   delegation keeps this working no matter when that swap happens.
-================================ */
-
-function magneticProjectCards() {
-  const grid = document.querySelector(".project-grid");
-  if (!grid) return;
-
-  grid.addEventListener("mousemove", (event) => {
-    const card = event.target.closest(".project-card");
-    if (!card) return;
-
-    const cardRect = card.getBoundingClientRect();
-
-    const x = event.clientX - cardRect.left;
-    const y = event.clientY - cardRect.top;
-
-    const centerX = cardRect.width / 2;
-    const centerY = cardRect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -4;
-    const rotateY = ((x - centerX) / centerX) * 4;
-
-    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  });
-
-  grid.addEventListener("mouseout", (event) => {
-    const card = event.target.closest(".project-card");
-    if (!card || card.contains(event.relatedTarget)) return;
-
-    card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg)";
-  });
 }
 
 /* ================================

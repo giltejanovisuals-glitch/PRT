@@ -41,38 +41,21 @@
     display: none;
   }
 
-  /* Project boards: nothing important may depend on :hover */
-  .artboard-expand {
-    opacity: 1;
-    transform: scale(1);
+  /* Project folders: nothing important may depend on :hover, which
+     doesn't exist here - so the glass reads clearly at rest (image
+     already sharp, glow already visible) instead of needing a hover
+     to reveal anything, and a tap opens the project directly
+     regardless of this resting state. */
+  .folder-glow {
+    opacity: 0.85;
   }
 
-  .artboard img,
-  .project-card:hover .artboard img,
-  .project-card:focus-within .artboard img {
-    transform: none;
-    filter: grayscale(0.35) contrast(1.15) brightness(0.9);
+  .folder-preview img {
+    filter: saturate(0.9) brightness(0.95) blur(0px);
   }
 
-  .project-card:hover .artboard,
-  .project-card:focus-within .artboard {
-    transform: rotate(var(--tilt, 0deg));
-    box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.6);
-  }
-
-  .project-card:hover .artboard::before,
-  .project-card:focus-within .artboard::before {
-    transform: rotate(3deg);
-  }
-
-  .project-card:hover .artboard::after,
-  .project-card:focus-within .artboard::after {
-    transform: rotate(-4deg);
-    opacity: 0.5;
-  }
-
-  .project-card:active .artboard {
-    transform: scale(0.98);
+  .project-card:active .folder {
+    transform: translateY(-3px) scale(0.99);
     transition-duration: 0.15s;
   }
 
@@ -161,11 +144,11 @@
     min-width: 0;
   }
 
-  .project-card:nth-child(1) .project-info span {
+  .project-card:nth-child(1) .folder-number {
     font-size: 32px;
   }
 
-  .project-card:nth-child(1) .project-info h3 {
+  .project-card:nth-child(1) .folder-text h3 {
     font-size: 18px;
   }
 
@@ -416,7 +399,7 @@
     font-size: 11px;
   }
 
-  /* --- Selected work: one artboard per row, stable and tap-friendly --- */
+  /* --- Selected work: one folder per row, stable and tap-friendly --- */
   .projects-section {
     padding: 0;
   }
@@ -455,54 +438,52 @@
   .project-card:nth-child(4) {
     grid-column: auto;
     grid-row: auto;
-    --tilt: 0deg;
-    /* The desktop "stack unstacking" reveal offsets (up to 70px) are
-       tuned for the wide bento grid - on a single narrow column they
-       push the pre-reveal artboard past the viewport edge. */
-    --stack-x: 0px;
-    --stack-y: 18px;
-    --stack-rot: 3deg;
   }
 
-  .project-card .artboard {
+  /* Folders keep a stable, readable aspect ratio on phones - the
+     hover-only glass effects are handled separately by the touch
+     capability query above, not tied to viewport width, since a touch
+     laptop at desktop width should get the same treatment as a phone. */
+  .folder {
     aspect-ratio: 4 / 5;
     height: auto;
   }
 
-  .artboard::before {
-    transform: rotate(3deg);
+  /* All four folders read the same on a single-column phone layout -
+     the compact label/arrow treatment for cards 3/4 no longer applies. */
+  .project-card:nth-child(3) .folder-label,
+  .project-card:nth-child(4) .folder-label {
+    left: 20px;
+    right: 68px;
+    bottom: 18px;
+    gap: 12px;
   }
 
-  .artboard::after {
-    transform: rotate(-4deg);
+  .project-card:nth-child(3) .folder-arrow,
+  .project-card:nth-child(4) .folder-arrow {
+    width: 40px;
+    height: 40px;
+    right: 16px;
+    bottom: 16px;
+    font-size: 14px;
   }
 
-  /* All four boards read the same on a single-column phone layout -
-     the compact bento treatment for cards 3/4 no longer applies. */
-  .project-card:nth-child(3) .project-info,
-  .project-card:nth-child(4) .project-info {
-    left: 22px;
-    right: 22px;
-    bottom: 22px;
-    flex-direction: row;
-    align-items: flex-end;
-    gap: 16px;
-  }
-
-  .project-card:nth-child(3) .project-info span,
-  .project-card:nth-child(4) .project-info span {
-    font-size: 24px;
-  }
-
-  .project-card:nth-child(3) .project-info h3,
-  .project-card:nth-child(4) .project-info h3 {
-    font-size: 15px;
-    margin-bottom: 5px;
-  }
-
-  .project-card:nth-child(3) .project-info p,
-  .project-card:nth-child(4) .project-info p {
+  .project-card:nth-child(3) .folder-number,
+  .project-card:nth-child(4) .folder-number {
+    width: 32px;
+    height: 32px;
     font-size: 12px;
+  }
+
+  .project-card:nth-child(3) .folder-text h3,
+  .project-card:nth-child(4) .folder-text h3 {
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+
+  .project-card:nth-child(3) .folder-text p,
+  .project-card:nth-child(4) .folder-text p {
+    font-size: 11px;
   }
 
   /* --- Capabilities carousel --- */

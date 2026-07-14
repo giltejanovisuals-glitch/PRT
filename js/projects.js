@@ -25,17 +25,25 @@ function buildProjectCard(project) {
 
   return `
     <article class="project-card">
-      <a class="artboard" href="${overviewUrl}" aria-label="View project: ${title}">
-        <img src="${image}" alt="${alt}" width="400" height="310" loading="lazy" />
-        <span class="artboard-shade" aria-hidden="true"></span>
-        <span class="artboard-pin" aria-hidden="true"></span>
-        <span class="artboard-expand" aria-hidden="true">
-          <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+      <a class="folder" href="${overviewUrl}" aria-label="View project: ${title}">
+        <span class="folder-glow" aria-hidden="true"></span>
+        <span class="folder-back" aria-hidden="true"></span>
+        <span class="folder-tab" aria-hidden="true"></span>
+
+        <div class="folder-front" aria-hidden="true">
+          <span class="folder-sheen"></span>
+          <div class="folder-preview">
+            <img src="${image}" alt="${alt}" width="400" height="310" loading="lazy" />
+          </div>
+        </div>
+
+        <span class="folder-arrow" aria-hidden="true">
+          <i class="fa-solid fa-arrow-right"></i>
         </span>
 
-        <div class="project-info">
-          <span>${number}</span>
-          <div>
+        <div class="folder-label">
+          <span class="folder-number">${number}</span>
+          <div class="folder-text">
             <h3>${title}</h3>
             <p>${category}</p>
           </div>
