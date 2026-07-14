@@ -341,38 +341,6 @@
 }
 
 /* --------------------------------
-   CONTACT "STATUS" PULSE
--------------------------------- */
-.export-status-dot::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: var(--accent-light);
-  opacity: 0.4;
-  animation: statusPulse 1.8s ease-out infinite;
-}
-
-@keyframes statusPulse {
-  0% {
-    transform: scale(0.6);
-    opacity: 0.45;
-  }
-
-  100% {
-    transform: scale(1.9);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .export-status-dot::after {
-    animation: none;
-    opacity: 0;
-  }
-}
-
-/* --------------------------------
    CONTACT SECTION - export/send reveal
    A progress line draws in, content settles in sequence, and the
    primary button pings once as if it just finished rendering and is
@@ -380,7 +348,7 @@
 -------------------------------- */
 .contact-section.story-armed .contact-eyebrow,
 .contact-section.story-armed .contact-title,
-.contact-section.story-armed .export-panel,
+.contact-section.story-armed .contact-actions,
 .contact-section.story-armed .contact-cards {
   opacity: 0;
   transform: translateY(20px);
@@ -395,7 +363,7 @@
 
 .contact-section.story-armed.is-revealed .contact-eyebrow,
 .contact-section.story-armed.is-revealed .contact-title,
-.contact-section.story-armed.is-revealed .export-panel,
+.contact-section.story-armed.is-revealed .contact-actions,
 .contact-section.story-armed.is-revealed .contact-cards {
   opacity: 1;
   transform: translateY(0);
@@ -409,7 +377,7 @@
   transition-delay: 0.15s;
 }
 
-.contact-section.story-armed.is-revealed .export-panel {
+.contact-section.story-armed.is-revealed .contact-actions {
   transition-delay: 0.3s;
 }
 

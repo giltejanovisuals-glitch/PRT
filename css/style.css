@@ -1110,92 +1110,83 @@ span {
 }
 
 /* ================================
-   TESTIMONIAL
+   ABOUT ME
 ================================ */
-.testimonial-section {
+.about-section {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: stretch;
   margin-top: 42px;
 }
 
-.testimonial-card,
-.image-card {
-  min-height: 360px;
+.about-copy,
+.about-portrait {
+  min-height: 560px;
 }
 
-.testimonial-card {
-  padding: 34px;
+.about-copy {
+  display: flex;
+  flex-direction: column;
+  padding: 46px 44px;
   border-right: none;
 }
 
-.quote-mark {
-  color: var(--accent-light);
-  font-size: 95px;
+.about-heading {
+  max-width: 560px;
   font-family: var(--font-display);
-  font-weight: 500;
-  line-height: 0.7;
-  margin-bottom: 20px;
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
 }
 
-.testimonial-card > p {
-  max-width: 490px;
-  color: #dddddd;
+.about-intro {
+  max-width: 480px;
+  color: var(--text);
   font-size: 17px;
-  line-height: 1.65;
-  margin-bottom: 44px;
+  font-weight: 600;
+  line-height: 1.6;
+  margin-top: 24px;
 }
 
-.client-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 38px;
+.about-body {
+  max-width: 480px;
+  color: #c2c2c2;
+  font-size: 15px;
+  line-height: 1.7;
+  margin-top: 16px;
 }
 
-.client-info img {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  object-fit: cover;
-  filter: grayscale(1);
+.about-statement {
+  max-width: 480px;
+  margin-top: 30px;
+  padding-left: 22px;
+  border-left: 2px solid var(--accent-light);
+  color: var(--accent-light);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.5;
 }
 
-.client-info h3 {
-  font-size: 13px;
-  text-transform: uppercase;
-  margin-bottom: 5px;
+.about-statement-mark {
+  font-style: normal;
 }
 
-.client-info p {
-  color: var(--muted);
-  font-size: 12px;
+.about-link {
+  margin-top: auto;
+  padding-top: 34px;
 }
 
-.slider-dots {
-  display: flex;
-  gap: 12px;
-}
-
-.slider-dots span {
-  width: 8px;
-  height: 8px;
-  background: #666;
-  border-radius: 50%;
-}
-
-.slider-dots .active {
-  background: var(--accent);
-}
-
-.image-card {
+.about-portrait {
   overflow: hidden;
 }
 
-.image-card img {
+.about-portrait img {
   height: 100%;
-  min-height: 360px;
+  min-height: 560px;
   object-fit: cover;
-  filter: grayscale(1) contrast(1.15);
+  filter: grayscale(0.25) contrast(1.08);
 }
 
 /* ================================
@@ -1348,103 +1339,12 @@ span {
   color: var(--accent-light);
 }
 
-/* The contact form itself is styled like a software export/render
-   panel - project metadata rows, a live status, and the action bar
-   that "sends" it. */
-.export-panel {
-  width: 100%;
-  max-width: 640px;
-  margin-top: 10px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--panel-soft);
-  overflow: hidden;
-  text-align: left;
-}
-
-.export-panel-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.export-panel-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-light);
-}
-
-.export-panel-label {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.export-field {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--line);
-}
-
-.export-field-label {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-.export-field-value {
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 600;
-  text-align: right;
-}
-
-.export-field-value.is-placeholder {
-  color: var(--muted);
-  font-weight: 500;
-  font-style: italic;
-}
-
-.export-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--accent-light);
-}
-
-.export-status-dot {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-light);
-  flex-shrink: 0;
-}
-
-.export-panel .contact-actions {
-  justify-content: flex-start;
-  padding: 20px 22px;
-  margin-top: 0;
-}
-
 .contact-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
-  margin-top: 6px;
+  margin-top: 10px;
 }
 
 .cta-button {

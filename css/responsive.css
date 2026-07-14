@@ -167,21 +167,21 @@
      touching the desktop DOM/visual order. */
   .hero { order: 1; }
   .projects-section { order: 2; }
-  .impact-panel { order: 3; }
-  .services-section { order: 4; }
-  .toolkit-section { order: 5; }
-  .experience-section { order: 6; }
-  .testimonial-section { order: 7; }
+  .about-section { order: 3; }
+  .impact-panel { order: 4; }
+  .services-section { order: 5; }
+  .toolkit-section { order: 6; }
+  .experience-section { order: 7; }
   .trusted-strip { order: 8; }
   .education-section { order: 9; }
   .contact-section { order: 10; }
   .site-footer { order: 11; }
 
+  .about-section,
   .impact-panel,
   .services-section,
   .toolkit-section,
   .experience-section,
-  .testimonial-section,
   .trusted-strip,
   .education-section,
   .contact-section {
@@ -544,23 +544,31 @@
     left: -4px;
   }
 
-  /* --- Testimonial / trust --- */
-  .testimonial-section {
+  /* --- About / trust --- */
+  .about-section {
     grid-template-columns: 1fr;
   }
 
-  .testimonial-card {
+  .about-copy {
     border-bottom: none;
     padding: 28px var(--mobile-gutter);
   }
 
-  .testimonial-card > p {
+  .about-heading {
+    font-size: clamp(24px, 7vw, 30px);
+  }
+
+  .about-intro {
     font-size: 16px;
   }
 
-  .image-card,
-  .image-card img {
-    min-height: 260px;
+  .about-link {
+    padding-top: 24px;
+  }
+
+  .about-portrait,
+  .about-portrait img {
+    min-height: 320px;
   }
 
   .trusted-strip {
@@ -597,20 +605,6 @@
 
   .contact-title {
     font-size: clamp(24px, 7vw, 32px);
-  }
-
-  .export-field {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .export-field-value {
-    text-align: left;
-  }
-
-  .export-panel .contact-actions {
-    justify-content: center;
   }
 
   .cta-button,
@@ -653,6 +647,7 @@
      site is still reachable by scrolling. */
   .nav-item[data-target="#services"],
   .nav-item[data-target="#toolkit"],
+  .nav-item[data-target="#experience"],
   .nav-item[data-target="#education"] {
     display: none;
   }

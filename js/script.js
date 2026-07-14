@@ -39,7 +39,7 @@ function revealOnScroll() {
   // a bespoke scroll story (hero, project boards, timeline, toolkit,
   // contact) are handled separately below.
   const revealElements = document.querySelectorAll(
-    ".service-card, .stat-card, .impact-intro, .testimonial-card, .image-card, .education-card, .trusted-strip"
+    ".service-card, .stat-card, .impact-intro, .about-copy, .about-portrait, .education-card, .trusted-strip"
   );
 
   revealElements.forEach((element) => {
@@ -565,16 +565,3 @@ function debounce(fn, wait) {
     timer = setTimeout(() => fn(...args), wait);
   };
 }
-
-/* ================================
-   OPTIONAL: TESTIMONIAL DOTS
-================================ */
-
-const dots = document.querySelectorAll(".slider-dots span");
-
-dots.forEach((dot) => {
-  dot.addEventListener("click", () => {
-    dots.forEach((item) => item.classList.remove("active"));
-    dot.classList.add("active");
-  });
-});
