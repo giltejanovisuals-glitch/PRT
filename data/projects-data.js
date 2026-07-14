@@ -52,7 +52,7 @@ window.PROJECTS_DATA = [
     category: "Retail Campaign Materials",
     image: "assets/images/projects/project-visual-02.svg",
     alt: "Metal-Lite retail campaign marketing collateral",
-    overviewUrl: "pages/project.html?id=metal-lite-campaign",
+    overviewUrl: "pages/project-metal-lite-campaign.html",
     year: "2026",
     client: "Metal-Lite",
     type: "Retail Campaign",

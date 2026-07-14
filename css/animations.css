@@ -426,6 +426,26 @@
 }
 
 /* --------------------------------
+   METAL-LITE GALLERY - crossfade + scale, drawn out explicitly (even
+   though the blanket prefers-reduced-motion catch-all above already
+   neutralizes these) so reduced-motion behavior stays obvious and
+   robust regardless of selector specificity, matching the .folder and
+   .dock-item overrides elsewhere in this file.
+-------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .mlc-preview-frame,
+  .mlc-nav-btn,
+  .mlc-thumb,
+  .mlc-swipe-track {
+    transition: none;
+  }
+
+  .mlc-swipe-hint i {
+    animation: none;
+  }
+}
+
+/* --------------------------------
    FLOATING NAV - focus flash
    Briefly pulses the target section when a nav pill is clicked.
 -------------------------------- */
