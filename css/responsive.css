@@ -849,6 +849,33 @@
     margin-top: 40px;
   }
 
+  /* --- Hooga catalog page: compact header, smaller counter pill ---
+     The catalog stack itself needs no overrides here - each .hgc-frame
+     is already 100% width with height set by aspect-ratio, so it
+     naturally fills the screen edge-to-edge on any viewport. */
+  .hgc-back-full {
+    display: none;
+  }
+
+  .hgc-back-short {
+    display: inline;
+  }
+
+  .hgc-intro {
+    padding: 14px var(--mobile-gutter) 24px;
+  }
+
+  .hgc-title {
+    margin: 10px 0 10px;
+  }
+
+  .hgc-counter {
+    top: calc(12px + env(safe-area-inset-top));
+    right: 12px;
+    padding: 6px 11px;
+    font-size: 10px;
+  }
+
 }
 
 /* --------------------------------

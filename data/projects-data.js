@@ -75,7 +75,7 @@ window.PROJECTS_DATA = [
     category: "Print & Editorial Design",
     image: "assets/images/projects/project-visual-03.svg",
     alt: "Hooga catalog layout and print editorial design",
-    overviewUrl: "pages/project.html?id=hooga-campaign",
+    overviewUrl: "pages/project-hooga-catalog.html",
     year: "2025",
     client: "Hooga",
     type: "Print & Editorial",
