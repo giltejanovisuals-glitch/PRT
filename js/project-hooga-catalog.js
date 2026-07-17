@@ -11,26 +11,25 @@
    scope, so unwrapped top-level consts here would collide with those
    and throw a SyntaxError that breaks both files.
 
-   PLACEHOLDER ARTWORK: each entry renders as a styled paper/ink
-   gradient panel (see the .hgc-tone-* classes in css/style.css)
-   standing in for a real catalog spread. Once real photography exists,
-   add an "image"/"alt" field per item below - buildPanel() already
-   prefers a lazy-loaded <img> over the placeholder whenever one is
-   present, so the surrounding stack, reveal, and counter mechanics
-   don't need to change.
+   Real catalog photography lives in assets/images/hooga-catalog/,
+   named 01.webp - 13.webp for stack order. buildPanel() renders a
+   lazy-loaded <img> for every entry below.
 ================================ */
 (function () {
   const CATALOG_ITEMS = [
-    { tone: "hgc-tone-a", icon: "fa-solid fa-book-open", title: "Cover — Seasonal Range" },
-    { tone: "hgc-tone-b", icon: "fa-solid fa-grip", title: "Contents & Grid System" },
-    { tone: "hgc-tone-c", icon: "fa-solid fa-swatchbook", title: "Category Divider — Lounge" },
-    { tone: "hgc-tone-d", icon: "fa-solid fa-couch", title: "Product Layout — Lounge Collection" },
-    { tone: "hgc-tone-a", icon: "fa-solid fa-ruler-combined", title: "Detail & Materials Spread" },
-    { tone: "hgc-tone-b", icon: "fa-regular fa-images", title: "Editorial Spread — Studio Story" },
-    { tone: "hgc-tone-c", icon: "fa-solid fa-swatchbook", title: "Category Divider — Dining" },
-    { tone: "hgc-tone-d", icon: "fa-solid fa-layer-group", title: "Product Layout — Dining Collection" },
-    { tone: "hgc-tone-a", icon: "fa-solid fa-tag", title: "Retail Spec Sheet" },
-    { tone: "hgc-tone-b", icon: "fa-solid fa-book", title: "Closing Spread — Back Cover" }
+    { image: "../assets/images/hooga-catalog/01.webp", alt: "Hooga catalog spread 1" },
+    { image: "../assets/images/hooga-catalog/02.webp", alt: "Hooga catalog spread 2" },
+    { image: "../assets/images/hooga-catalog/03.webp", alt: "Hooga catalog spread 3" },
+    { image: "../assets/images/hooga-catalog/04.webp", alt: "Hooga catalog spread 4" },
+    { image: "../assets/images/hooga-catalog/05.webp", alt: "Hooga catalog spread 5" },
+    { image: "../assets/images/hooga-catalog/06.webp", alt: "Hooga catalog spread 6" },
+    { image: "../assets/images/hooga-catalog/07.webp", alt: "Hooga catalog spread 7" },
+    { image: "../assets/images/hooga-catalog/08.webp", alt: "Hooga catalog spread 8" },
+    { image: "../assets/images/hooga-catalog/09.webp", alt: "Hooga catalog spread 9" },
+    { image: "../assets/images/hooga-catalog/10.webp", alt: "Hooga catalog spread 10" },
+    { image: "../assets/images/hooga-catalog/11.webp", alt: "Hooga catalog spread 11" },
+    { image: "../assets/images/hooga-catalog/12.webp", alt: "Hooga catalog spread 12" },
+    { image: "../assets/images/hooga-catalog/13.webp", alt: "Hooga catalog spread 13" }
   ];
 
   const catalog = document.getElementById("hgc-catalog");
@@ -61,7 +60,7 @@
   function buildPanel(item, index) {
     return (
       '<figure class="hgc-frame" data-index="' + index +
-      '" aria-label="' + item.title + '">' +
+      '" aria-label="' + (item.alt || item.title) + '">' +
       buildVisual(item) +
       "</figure>"
     );

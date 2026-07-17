@@ -2996,13 +2996,30 @@ span {
   line-height: 1.7;
 }
 
-/* --- Catalog: full-bleed vertical stack, no gaps/margins/borders ---
-   Breaks out of .portfolio-page's centered max-width to run true
-   edge-to-edge, regardless of where .hgc-catalog sits in the DOM. */
+.hgc-subline {
+  max-width: 56ch;
+  margin-top: 10px;
+  color: var(--muted);
+  opacity: 0.75;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* --- Catalog: continuous vertical stack, no gaps between spreads ---
+   Breaks out of .portfolio-page's 1440px cap via the left/transform
+   trick (centers on the viewport regardless of .hgc-catalog's own
+   width, so it stays correct once max-width kicks in on wide
+   screens) instead of edge-to-edge - each spread reads as an
+   immersive but bounded image, not a full-bleed strip. */
 .hgc-catalog {
   display: block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100vw;
-  margin-left: calc(50% - 50vw);
+  max-width: 1600px;
+  padding: 0 clamp(48px, 5vw, 80px);
+  box-sizing: border-box;
 }
 
 .hgc-frame {

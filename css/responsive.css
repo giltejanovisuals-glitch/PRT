@@ -850,9 +850,12 @@
   }
 
   /* --- Hooga catalog page: compact header, smaller counter pill ---
-     The catalog stack itself needs no overrides here - each .hgc-frame
-     is already 100% width with height set by aspect-ratio, so it
-     naturally fills the screen edge-to-edge on any viewport. */
+     The catalog stack's side padding also shrinks here so spreads
+     stay spacious without eating too much of a small screen. */
+  .hgc-catalog {
+    padding: 0 clamp(16px, 4.5vw, 20px);
+  }
+
   .hgc-back-full {
     display: none;
   }
