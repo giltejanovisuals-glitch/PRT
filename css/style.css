@@ -522,310 +522,296 @@ span {
   text-transform: uppercase;
 }
 
-.project-grid {
+/* ================================
+   CREATIVE BOARDS - controller + preview
+   Split-screen layout: .cb-list is a flat, simplified card stack that
+   acts as a controller (select a project, then confirm with Open) for
+   the dominant .cb-preview pane beside it. Two preview states live
+   stacked on top of each other inside .cb-preview and are crossfaded
+   by toggling .is-gallery-mode on the pane itself: .cb-preview-shuffle
+   (ambient, mixed-project, auto-advancing) and .cb-preview-gallery
+   (the selected project's own images, vertically scrollable).
+================================ */
+.cb-layout {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 420px 250px;
-  gap: 46px 40px;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  align-items: start;
+  gap: 32px;
   padding: 24px clamp(4px, 3vw, 36px) 64px;
 }
 
-.project-card {
+.cb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cb-card {
   position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  transition: border-color 0.35s ease, background 0.35s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
 }
 
-.project-card:nth-child(1) {
-  grid-column: 1 / 8;
-  grid-row: 1 / 3;
-  --stack-delay: 0s;
+.cb-card {
+  text-decoration: none;
 }
 
-.project-card:nth-child(2) {
-  grid-column: 8 / 13;
-  grid-row: 1 / 2;
-  --stack-delay: 0.12s;
+/* .cb-card-select is only present in the JS-enhanced markup (the
+   no-JS fallback has thumb/body as direct children of the <a class="
+   cb-card"> instead) - it's a real flex box, not display:contents,
+   so it keeps a proper hit-testing/focus box for click, tap, and
+   assistive tech instead of being invisible to them. */
+.cb-card-select {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
 }
 
-.project-card:nth-child(3) {
-  grid-column: 8 / 11;
-  grid-row: 2 / 3;
-  --stack-delay: 0.22s;
+.cb-card:hover,
+.cb-card:focus-within {
+  border-color: rgba(79, 195, 181, 0.4);
+  transform: translateY(-2px);
 }
 
-.project-card:nth-child(4) {
-  grid-column: 11 / 13;
-  grid-row: 2 / 3;
-  --stack-delay: 0.3s;
-}
-
-/* ================================
-   PROJECT FOLDERS - frosted glass
-   Each Creative Boards card is a translucent glass folder: a back
-   panel peeking out top-right, a tab + front glass panel holding the
-   preview image, and a glass arrow badge marking the click target.
-   Layers bottom to top: .folder-glow < .folder-back < .folder-tab <
-   .folder-front (preview + sheen inside) < .folder-arrow /
-   .folder-label (both flat, unrotated, always on top and readable).
-================================ */
-.folder {
-  display: block;
-  position: relative;
-  height: 100%;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.project-card:hover .folder,
-.project-card:focus-within .folder {
-  /* !important: the scroll-reveal entrance rule in animations.css
-     (.project-grid.story-armed.is-revealed .project-card .folder) is
-     more specific than this and never stops applying once a card has
-     been revealed (that class is never removed), which would
-     otherwise permanently pin .folder's resting transform and block
-     this hover lift for good after the entrance animation finishes. */
-  transform: translateY(-6px) scale(1.012) !important;
-}
-
-.folder:focus-visible {
+.cb-card:focus-visible,
+.cb-card-select:focus-visible {
   outline: 2px solid var(--accent-light);
-  outline-offset: 4px;
-  border-radius: 20px;
+  outline-offset: 3px;
+  border-radius: 18px;
 }
 
-/* Ambient glow behind the glass, matching the reference's radial
-   backdrop - brightens on hover instead of the folder itself lighting
-   up unrealistically. */
-.folder-glow {
-  position: absolute;
-  /* Fixed px, not %: a percentage here scales with each card's own
-     width (the large featured card is 2-3x wider than the small
-     ones), and on narrow viewports that bleed can exceed the grid's
-     own gutter and push the whole page into horizontal scroll. */
-  inset: -14px;
-  z-index: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(79, 195, 181, 0.22), transparent 65%);
-  filter: blur(20px);
-  opacity: 0.7;
-  transition: opacity 0.45s ease, transform 0.45s ease;
-  pointer-events: none;
+.cb-card.is-selected {
+  border-color: var(--accent-light);
+  background: var(--accent-soft);
+  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.55);
 }
 
-.project-card:hover .folder-glow,
-.project-card:focus-within .folder-glow {
-  opacity: 1;
-  transform: scale(1.08);
+.cb-list.has-selection .cb-card:not(.is-selected) {
+  opacity: 0.55;
 }
 
-.folder-back {
-  position: absolute;
-  inset: 6px;
-  z-index: 1;
-  border-radius: 20px;
-  transform: translate(10px, -10px) rotate(1.5deg);
-  background: linear-gradient(160deg, rgba(79, 195, 181, 0.16) 0%, rgba(31, 111, 104, 0.1) 100%);
-  border: 1px solid rgba(245, 245, 240, 0.12);
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-}
-
-.project-card:hover .folder-back,
-.project-card:focus-within .folder-back {
-  transform: translate(14px, -14px) rotate(2deg);
-  border-color: rgba(79, 195, 181, 0.35);
-}
-
-.folder-tab {
-  position: absolute;
-  top: -8px;
-  left: 22px;
-  z-index: 2;
-  width: 30%;
-  min-width: 56px;
-  height: 22px;
-  border-radius: 14px 14px 0 0;
-  background: linear-gradient(160deg, rgba(79, 195, 181, 0.28), rgba(31, 111, 104, 0.18));
-  border: 1px solid rgba(245, 245, 240, 0.18);
-  border-bottom: none;
-  transition: border-color 0.4s ease;
-}
-
-.project-card:hover .folder-tab,
-.project-card:focus-within .folder-tab {
-  border-color: rgba(79, 195, 181, 0.45);
-}
-
-.folder-front {
-  position: absolute;
-  inset: 6px;
-  z-index: 3;
-  overflow: hidden;
-  border-radius: 20px;
-  background: linear-gradient(165deg, rgba(79, 195, 181, 0.2) 0%, rgba(36, 40, 39, 0.72) 45%, rgba(15, 17, 17, 0.92) 100%);
-  border: 1px solid rgba(245, 245, 240, 0.16);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition: border-color 0.4s ease, box-shadow 0.45s ease;
-}
-
-.project-card:hover .folder-front,
-.project-card:focus-within .folder-front {
-  border-color: rgba(79, 195, 181, 0.5);
-  box-shadow: 0 36px 64px -20px rgba(0, 0, 0, 0.7), 0 0 34px rgba(79, 195, 181, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
-}
-
-.folder-sheen {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(115deg, rgba(255, 255, 255, 0.1) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.04) 100%);
-  pointer-events: none;
-}
-
-.folder-preview {
-  position: absolute;
-  top: 14px;
-  left: 10%;
-  right: 10%;
-  height: 56%;
-  z-index: 2;
-  overflow: hidden;
+.cb-card-thumb {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  margin: 16px 0 16px 16px;
   border-radius: 12px;
-  mask-image: linear-gradient(to bottom, #000 65%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 65%, transparent 100%);
+  overflow: hidden;
+  background: var(--panel-soft);
 }
 
-.folder-preview img {
-  position: absolute;
-  inset: 0;
+.cb-card-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.75) brightness(0.85) blur(1.5px);
-  transform: scale(1.04);
-  transition: filter 0.45s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: saturate(0.8) brightness(0.9);
+  transition: filter 0.35s ease;
 }
 
-.project-card:hover .folder-preview img,
-.project-card:focus-within .folder-preview img {
-  filter: saturate(1) brightness(1) blur(0px);
-  transform: scale(1.08);
+.cb-card:hover .cb-card-thumb img,
+.cb-card.is-selected .cb-card-thumb img {
+  filter: saturate(1) brightness(1);
 }
 
-.folder-arrow {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: var(--text);
-  font-size: 14px;
-  background: linear-gradient(155deg, rgba(79, 195, 181, 0.5), rgba(31, 111, 104, 0.32));
-  border: 1px solid rgba(245, 245, 240, 0.28);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease;
-}
-
-.project-card:hover .folder-arrow,
-.project-card:focus-within .folder-arrow {
-  transform: translateX(4px);
-  background: linear-gradient(155deg, rgba(79, 195, 181, 0.75), rgba(31, 111, 104, 0.45));
-}
-
-.folder-label {
-  position: absolute;
-  left: 20px;
-  right: 68px;
-  bottom: 18px;
-  z-index: 4;
+.cb-card-body {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 16px;
+  transition: padding-right 0.3s ease;
 }
 
-.folder-number {
+/* Reserve room for the Open pill once it's revealed, so it never
+   overlaps the title/category text instead of just sitting on top of it. */
+.cb-card.is-selected .cb-card-body {
+  padding-right: 96px;
+}
+
+.cb-card-number {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: rgba(79, 195, 181, 0.22);
   border: 1px solid rgba(79, 195, 181, 0.4);
   color: var(--accent-light);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
 }
 
-.folder-text {
+.cb-card-text {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.folder-text h3 {
+.cb-card-title {
   font-size: 14px;
   text-transform: uppercase;
-  margin-bottom: 3px;
-  transition: color 0.3s ease;
+  letter-spacing: 0.2px;
 }
 
-.folder-text p {
+.cb-card-category {
   color: var(--muted);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  transition: color 0.3s ease;
 }
 
-.project-card:hover .folder-text p,
-.project-card:focus-within .folder-text p {
-  color: var(--accent-light);
-}
-
-/* The two small bottom-right folders are too narrow for the full
-   label + arrow row, so drop the arrow badge's reserved space and
-   shrink everything else down a notch. */
-.project-card:nth-child(3) .folder-label,
-.project-card:nth-child(4) .folder-label {
-  left: 16px;
-  right: 16px;
-  bottom: 14px;
+/* The "Open" pill - revealed only once its card is selected, so the
+   first click always previews and the second (this) commits to the
+   full project page. Absolutely positioned so its reveal never
+   reflows the card or its neighbours. */
+.cb-card-open {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-}
-
-.project-card:nth-child(3) .folder-arrow,
-.project-card:nth-child(4) .folder-arrow {
-  width: 32px;
-  height: 32px;
-  right: 12px;
-  bottom: 12px;
-  font-size: 12px;
-}
-
-.project-card:nth-child(3) .folder-number,
-.project-card:nth-child(4) .folder-number {
-  width: 26px;
-  height: 26px;
-  font-size: 10px;
-}
-
-.project-card:nth-child(3) .folder-text h3,
-.project-card:nth-child(4) .folder-text h3 {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--accent-light);
+  color: #0c0c0c;
   font-size: 11px;
-  line-height: 1.3;
-  margin-bottom: 2px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(-50%) scale(0.85);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.project-card:nth-child(3) .folder-text p,
-.project-card:nth-child(4) .folder-text p {
-  font-size: 9px;
+.cb-card.is-selected .cb-card-open {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  pointer-events: auto;
+}
+
+.cb-card-open:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* --- Preview pane: shuffle + gallery panels stacked and crossfaded --- */
+.cb-preview {
+  position: sticky;
+  top: 24px;
+  min-height: 460px;
+  height: 60vh;
+  max-height: 640px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: linear-gradient(165deg, rgba(79, 195, 181, 0.12) 0%, rgba(36, 40, 39, 0.6) 45%, rgba(15, 17, 17, 0.92) 100%);
+  border: 1px solid var(--line);
+  box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.6);
+}
+
+.cb-preview-shuffle,
+.cb-preview-gallery {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.cb-preview.is-gallery-mode .cb-preview-shuffle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cb-preview-gallery {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cb-preview.is-gallery-mode .cb-preview-gallery {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Ambient mode: a horizontally scrollable, scroll-snapped strip the
+   user can drag/scroll through manually - the same mechanism JS uses
+   to auto-advance (scrollTo), so "slow auto rotation" and "let the
+   user browse manually" share one implementation instead of two. */
+.cb-preview-shuffle {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  cursor: grab;
+  scrollbar-width: none;
+}
+
+.cb-preview-shuffle::-webkit-scrollbar {
+  display: none;
+}
+
+.cb-preview-shuffle.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.cb-shuffle-slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+
+.cb-shuffle-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Selected-project mode: the project's own images, stacked vertically
+   and scrollable without leaving the section. */
+.cb-preview-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+  scroll-snap-type: y proximity;
+}
+
+.cb-gallery-tile {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+.cb-gallery-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ================================

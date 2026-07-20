@@ -74,7 +74,7 @@ function revealOnScroll() {
 function scrollStory() {
   const targets = [
     document.querySelector(".hero"),
-    document.querySelector(".project-grid"),
+    document.querySelector(".cb-list"),
     document.querySelector(".experience-section"),
     document.querySelector(".contact-section"),
   ].filter(Boolean);

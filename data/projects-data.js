@@ -89,7 +89,24 @@ window.PROJECTS_DATA = [
     approach: "I applied the identity's typography and color system consistently across every touchpoint, adapting the same visual language to the constraints of each medium - from packaging and signage to vehicle graphics and retail materials - so it reads as one cohesive brand.",
     heroImage: "",
     heroAlt: "",
-    gallery: []
+    // Real catalog spreads (same source as pages/project-hooga-catalog.html) -
+    // the only project with real photography on disk today, so it's the one
+    // Creative Boards preview that shows actual images instead of placeholders.
+    gallery: [
+      { image: "assets/images/hooga-catalog/01.webp", alt: "Porta Mobili brand application spread 01" },
+      { image: "assets/images/hooga-catalog/02.webp", alt: "Porta Mobili brand application spread 02" },
+      { image: "assets/images/hooga-catalog/03.webp", alt: "Porta Mobili brand application spread 03" },
+      { image: "assets/images/hooga-catalog/04.webp", alt: "Porta Mobili brand application spread 04" },
+      { image: "assets/images/hooga-catalog/05.webp", alt: "Porta Mobili brand application spread 05" },
+      { image: "assets/images/hooga-catalog/06.webp", alt: "Porta Mobili brand application spread 06" },
+      { image: "assets/images/hooga-catalog/07.webp", alt: "Porta Mobili brand application spread 07" },
+      { image: "assets/images/hooga-catalog/08.webp", alt: "Porta Mobili brand application spread 08" },
+      { image: "assets/images/hooga-catalog/09.webp", alt: "Porta Mobili brand application spread 09" },
+      { image: "assets/images/hooga-catalog/10.webp", alt: "Porta Mobili brand application spread 10" },
+      { image: "assets/images/hooga-catalog/11.webp", alt: "Porta Mobili brand application spread 11" },
+      { image: "assets/images/hooga-catalog/12.webp", alt: "Porta Mobili brand application spread 12" },
+      { image: "assets/images/hooga-catalog/13.webp", alt: "Porta Mobili brand application spread 13" }
+    ]
   },
   {
     id: "brand-social-assets",

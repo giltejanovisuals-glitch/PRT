@@ -41,21 +41,16 @@
     display: none;
   }
 
-  /* Project folders: nothing important may depend on :hover, which
-     doesn't exist here - so the glass reads clearly at rest (image
-     already sharp, glow already visible) instead of needing a hover
-     to reveal anything, and a tap opens the project directly
-     regardless of this resting state. */
-  .folder-glow {
-    opacity: 0.85;
+  /* Creative Board cards: nothing important may depend on :hover, which
+     doesn't exist here - the thumbnail reads at full clarity at rest
+     instead of needing a hover to sharpen, and a tap gives brief
+     press feedback instead of relying on a hover lift. */
+  .cb-card-thumb img {
+    filter: saturate(1) brightness(1);
   }
 
-  .folder-preview img {
-    filter: saturate(0.9) brightness(0.95) blur(0px);
-  }
-
-  .project-card:active .folder {
-    transform: translateY(-3px) scale(0.99);
+  .cb-card:active {
+    transform: translateY(-1px) scale(0.99);
     transition-duration: 0.15s;
   }
 
@@ -142,14 +137,6 @@
   .toolkit-dock-wrap,
   .timeline-h {
     min-width: 0;
-  }
-
-  .project-card:nth-child(1) .folder-number {
-    font-size: 32px;
-  }
-
-  .project-card:nth-child(1) .folder-text h3 {
-    font-size: 18px;
   }
 
   /* --- Mooni case study: tighter grids before the full mobile
@@ -410,7 +397,7 @@
     font-size: 11px;
   }
 
-  /* --- Selected work: one folder per row, stable and tap-friendly --- */
+  /* --- Creative Boards: swipeable card row above a stacked preview --- */
   .projects-section {
     padding: 0;
   }
@@ -435,66 +422,44 @@
     word-break: keep-all;
   }
 
-  .project-grid {
+  .cb-layout {
     grid-template-columns: 1fr;
-    grid-template-rows: none;
-    grid-auto-rows: auto;
-    gap: 26px;
-    padding: 0 var(--mobile-gutter) 8px;
+    gap: 18px;
+    padding: 0 0 8px;
   }
 
-  .project-card:nth-child(1),
-  .project-card:nth-child(2),
-  .project-card:nth-child(3),
-  .project-card:nth-child(4) {
-    grid-column: auto;
-    grid-row: auto;
-  }
-
-  /* Folders keep a stable, readable aspect ratio on phones - the
-     hover-only glass effects are handled separately by the touch
-     capability query above, not tied to viewport width, since a touch
-     laptop at desktop width should get the same treatment as a phone. */
-  .folder {
-    aspect-ratio: 4 / 5;
-    height: auto;
-  }
-
-  /* All four folders read the same on a single-column phone layout -
-     the compact label/arrow treatment for cards 3/4 no longer applies. */
-  .project-card:nth-child(3) .folder-label,
-  .project-card:nth-child(4) .folder-label {
-    left: 20px;
-    right: 68px;
-    bottom: 18px;
+  /* Cards become a horizontally swipeable row instead of a controller
+     list - touch gestures do the selecting, no small arrows needed. */
+  .cb-list {
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     gap: 12px;
+    padding: 0 var(--mobile-gutter) 4px;
+    scrollbar-width: none;
   }
 
-  .project-card:nth-child(3) .folder-arrow,
-  .project-card:nth-child(4) .folder-arrow {
-    width: 40px;
-    height: 40px;
-    right: 16px;
-    bottom: 16px;
-    font-size: 14px;
+  .cb-list::-webkit-scrollbar {
+    display: none;
   }
 
-  .project-card:nth-child(3) .folder-number,
-  .project-card:nth-child(4) .folder-number {
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
+  .cb-card {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
   }
 
-  .project-card:nth-child(3) .folder-text h3,
-  .project-card:nth-child(4) .folder-text h3 {
-    font-size: 14px;
-    margin-bottom: 3px;
-  }
-
-  .project-card:nth-child(3) .folder-text p,
-  .project-card:nth-child(4) .folder-text p {
-    font-size: 11px;
+  /* The preview no longer sticks to the viewport once it's stacked
+     below a swipeable row - sticky here would just pin it awkwardly
+     mid-scroll. Stays position: relative (not static) since its
+     shuffle/gallery panes are position: absolute and need it as their
+     containing block. */
+  .cb-preview {
+    position: relative;
+    top: auto;
+    margin: 0 var(--mobile-gutter);
+    width: auto;
+    height: 60vh;
+    min-height: 360px;
   }
 
   /* --- Capabilities carousel --- */

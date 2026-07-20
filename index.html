@@ -161,12 +161,13 @@
       </div>
     </section>
 
-    <!-- SELECTED PROJECTS
-         These 4 cards are the no-JS fallback. With JS enabled,
-         js/projects.js overwrites this markup with cards built from
-         data/projects-data.js - edit that file to add, remove, or
-         reorder projects, and update the cards below to match so the
-         fallback stays in sync. -->
+    <!-- CREATIVE BOARDS
+         These 4 cards are the no-JS fallback (plain links straight to each
+         project page). With JS enabled, js/projects.js overwrites .cb-list
+         with cards built from data/projects-data.js and drives the
+         .cb-preview panel (ambient shuffle + per-project gallery) - edit
+         that data file to add, remove, or reorder projects, and update the
+         cards below to match so the fallback stays in sync. -->
     <section class="projects-section" id="projects">
       <div class="section-heading">
         <h2>
@@ -180,118 +181,77 @@
         </a>
       </div>
 
-      <div class="project-grid">
-        <article class="project-card">
-          <a class="folder" href="pages/project-mooni-campaign.html" aria-label="View project: Mooni Campaign Visuals">
-            <span class="folder-glow" aria-hidden="true"></span>
-            <span class="folder-back" aria-hidden="true"></span>
-            <span class="folder-tab" aria-hidden="true"></span>
-
-            <div class="folder-front" aria-hidden="true">
-              <span class="folder-sheen"></span>
-              <div class="folder-preview">
-                <!-- Replace with assets/images/projects/mooni-campaign.webp (update the matching entry in data/projects-data.js too) -->
-                <img src="assets/images/projects/project-visual-01.svg" alt="Mooni brand campaign product photography and layout design" width="400" height="310" loading="lazy" />
-              </div>
-            </div>
-
-            <span class="folder-arrow" aria-hidden="true">
-              <i class="fa-solid fa-arrow-right"></i>
+      <div class="cb-layout">
+        <div class="cb-list" id="cbList">
+          <a class="cb-card" href="pages/project-mooni-campaign.html" aria-label="View project: Mooni Campaign Visuals">
+            <span class="cb-card-thumb">
+              <img src="assets/images/projects/project-visual-01.svg" alt="" width="120" height="120" loading="lazy" />
             </span>
-
-            <div class="folder-label">
-              <span class="folder-number">01</span>
-              <div class="folder-text">
-                <h3>Mooni Campaign Visuals</h3>
-                <p>Premium Product Visuals</p>
-              </div>
-            </div>
-          </a>
-        </article>
-
-        <article class="project-card">
-          <a class="folder" href="pages/project-metal-lite-campaign.html" aria-label="View project: Metal-Lite Retail Campaign">
-            <span class="folder-glow" aria-hidden="true"></span>
-            <span class="folder-back" aria-hidden="true"></span>
-            <span class="folder-tab" aria-hidden="true"></span>
-
-            <div class="folder-front" aria-hidden="true">
-              <span class="folder-sheen"></span>
-              <div class="folder-preview">
-                <!-- Replace with assets/images/projects/metal-lite-campaign.webp (update the matching entry in data/projects-data.js too) -->
-                <img src="assets/images/projects/project-visual-02.svg" alt="Metal-Lite retail campaign marketing collateral" width="400" height="310" loading="lazy" />
-              </div>
-            </div>
-
-            <span class="folder-arrow" aria-hidden="true">
-              <i class="fa-solid fa-arrow-right"></i>
+            <span class="cb-card-body">
+              <span class="cb-card-number">01</span>
+              <span class="cb-card-text">
+                <span class="cb-card-title">Mooni Campaign Visuals</span>
+                <span class="cb-card-category">Premium Product Visuals</span>
+              </span>
             </span>
-
-            <div class="folder-label">
-              <span class="folder-number">02</span>
-              <div class="folder-text">
-                <h3>Metal-Lite Retail Campaign</h3>
-                <p>Retail Campaign Materials</p>
-              </div>
-            </div>
-          </a>
-        </article>
-
-        <article class="project-card">
-          <a class="folder" href="pages/project-hooga-catalog.html" aria-label="View project: Hooga Catalog System">
-            <span class="folder-glow" aria-hidden="true"></span>
-            <span class="folder-back" aria-hidden="true"></span>
-            <span class="folder-tab" aria-hidden="true"></span>
-
-            <div class="folder-front" aria-hidden="true">
-              <span class="folder-sheen"></span>
-              <div class="folder-preview">
-                <!-- Replace with assets/images/projects/hooga-campaign.webp (update the matching entry in data/projects-data.js too) -->
-                <img src="assets/images/projects/project-visual-03.svg" alt="Hooga catalog layout and print editorial design" width="400" height="310" loading="lazy" />
-              </div>
-            </div>
-
-            <span class="folder-arrow" aria-hidden="true">
-              <i class="fa-solid fa-arrow-right"></i>
+            <span class="cb-card-open">
+              Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </span>
-
-            <div class="folder-label">
-              <span class="folder-number">03</span>
-              <div class="folder-text">
-                <h3>Hooga Catalog System</h3>
-                <p>Print &amp; Editorial Design</p>
-              </div>
-            </div>
           </a>
-        </article>
 
-        <article class="project-card">
-          <a class="folder" href="pages/project.html?id=brand-social-assets" aria-label="View project: Brand Social Assets">
-            <span class="folder-glow" aria-hidden="true"></span>
-            <span class="folder-back" aria-hidden="true"></span>
-            <span class="folder-tab" aria-hidden="true"></span>
-
-            <div class="folder-front" aria-hidden="true">
-              <span class="folder-sheen"></span>
-              <div class="folder-preview">
-                <!-- Replace with assets/images/projects/brand-social-assets.webp (update the matching entry in data/projects-data.js too) -->
-                <img src="assets/images/projects/project-visual-04.svg" alt="Brand-consistent social media graphics for a lifestyle brand" width="400" height="310" loading="lazy" />
-              </div>
-            </div>
-
-            <span class="folder-arrow" aria-hidden="true">
-              <i class="fa-solid fa-arrow-right"></i>
+          <a class="cb-card" href="pages/project-metal-lite-campaign.html" aria-label="View project: Metal-Lite Retail Campaign">
+            <span class="cb-card-thumb">
+              <img src="assets/images/projects/project-visual-02.svg" alt="" width="120" height="120" loading="lazy" />
             </span>
-
-            <div class="folder-label">
-              <span class="folder-number">04</span>
-              <div class="folder-text">
-                <h3>Brand Social Assets</h3>
-                <p>Digital Design</p>
-              </div>
-            </div>
+            <span class="cb-card-body">
+              <span class="cb-card-number">02</span>
+              <span class="cb-card-text">
+                <span class="cb-card-title">Metal-Lite Retail Campaign</span>
+                <span class="cb-card-category">Retail Campaign Materials</span>
+              </span>
+            </span>
+            <span class="cb-card-open">
+              Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </span>
           </a>
-        </article>
+
+          <a class="cb-card" href="pages/project-hooga-catalog.html" aria-label="View project: Porta Mobili Visual Identity &amp; Brand Applications">
+            <span class="cb-card-thumb">
+              <img src="assets/images/projects/project-visual-03.svg" alt="" width="120" height="120" loading="lazy" />
+            </span>
+            <span class="cb-card-body">
+              <span class="cb-card-number">03</span>
+              <span class="cb-card-text">
+                <span class="cb-card-title">Porta Mobili Visual Identity &amp; Brand Applications</span>
+                <span class="cb-card-category">Brand Identity &amp; Art Direction</span>
+              </span>
+            </span>
+            <span class="cb-card-open">
+              Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </span>
+          </a>
+
+          <a class="cb-card" href="pages/project.html?id=brand-social-assets" aria-label="View project: Brand Social Assets">
+            <span class="cb-card-thumb">
+              <img src="assets/images/projects/project-visual-04.svg" alt="" width="120" height="120" loading="lazy" />
+            </span>
+            <span class="cb-card-body">
+              <span class="cb-card-number">04</span>
+              <span class="cb-card-text">
+                <span class="cb-card-title">Brand Social Assets</span>
+                <span class="cb-card-category">Digital Design</span>
+              </span>
+            </span>
+            <span class="cb-card-open">
+              Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </span>
+          </a>
+        </div>
+
+        <div class="cb-preview" id="cbPreview" aria-live="polite">
+          <div class="cb-preview-shuffle" id="cbShuffle"></div>
+          <div class="cb-preview-gallery" id="cbGallery"></div>
+        </div>
       </div>
     </section>
 
