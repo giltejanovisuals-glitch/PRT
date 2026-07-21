@@ -425,7 +425,7 @@
   .cb-preview {
     margin: 0 var(--mobile-gutter);
     width: auto;
-    height: 52vh;
+    height: 60vh;
     min-height: 320px;
   }
 

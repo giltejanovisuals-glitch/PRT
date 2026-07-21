@@ -607,10 +607,15 @@ span {
   border-radius: 18px;
 }
 
+/* Border goes from 1px to 2px on selection; every .cb-card sizes with
+   box-sizing: border-box (global reset), so the card's outer footprint
+   - and the grid around it - never shifts, only its inner content area
+   tightens by a single imperceptible pixel. */
 .cb-card.is-selected {
   border-color: var(--accent-light);
-  background: var(--accent-soft);
-  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.55);
+  border-width: 2px;
+  background: linear-gradient(165deg, rgba(79, 195, 181, 0.18) 0%, var(--accent-soft) 55%, var(--panel) 100%);
+  box-shadow: 0 0 0 3px rgba(79, 195, 181, 0.16), 0 18px 40px -22px rgba(0, 0, 0, 0.55);
 }
 
 /* Reserve room for the Open pill once it's revealed, so it never
@@ -620,7 +625,8 @@ span {
 }
 
 .cb-list.has-selection .cb-card:not(.is-selected) {
-  opacity: 0.55;
+  opacity: 0.5;
+  filter: saturate(0.85);
 }
 
 /* Small active indicator - a soft glowing dot, visible only once its
@@ -630,11 +636,11 @@ span {
   position: absolute;
   top: 14px;
   right: 14px;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: var(--accent-light);
-  box-shadow: 0 0 0 4px rgba(79, 195, 181, 0.22);
+  box-shadow: 0 0 0 5px rgba(79, 195, 181, 0.26), 0 0 10px 1px rgba(79, 195, 181, 0.5);
   opacity: 0;
   transform: scale(0.6);
   transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -672,35 +678,43 @@ span {
   text-transform: uppercase;
 }
 
-/* The "Open" pill - revealed only once its card is selected, so the
-   first click always previews and the second (this) commits to the
-   full project page. Absolutely positioned so its reveal never
-   reflows the rest of the card. */
+/* The "Open Project" pill - revealed only once its card is selected,
+   so the first click always previews and the second (this) commits to
+   the full case study. Pinned to the card's lower-right corner (not
+   centered) so its position reads consistently across every card, and
+   absolutely positioned so its reveal never reflows the rest of the
+   card. */
 .cb-card-open {
   position: absolute;
-  left: 50%;
-  bottom: 16px;
+  right: 14px;
+  bottom: 14px;
   z-index: 2;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: 5px;
+  padding: 7px 12px;
   border-radius: 999px;
   background: var(--accent-light);
   color: #0c0c0c;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 800;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
+  white-space: nowrap;
   opacity: 0;
-  transform: translate(-50%, 6px) scale(0.85);
+  transform: translateY(6px) scale(0.85);
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.cb-card-open-arrow {
+  font-size: 12px;
+  line-height: 1;
+}
+
 .cb-card.is-selected .cb-card-open {
   opacity: 1;
-  transform: translate(-50%, 0) scale(1);
+  transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
@@ -714,13 +728,42 @@ span {
   position: relative;
   width: 100%;
   min-height: 420px;
-  height: 62vh;
-  max-height: 680px;
+  height: 70vh;
+  max-height: 820px;
   border-radius: 22px;
   overflow: hidden;
   background: linear-gradient(165deg, rgba(79, 195, 181, 0.12) 0%, rgba(36, 40, 39, 0.6) 45%, rgba(15, 17, 17, 0.92) 100%);
   border: 1px solid var(--line);
   box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.6);
+}
+
+/* Status label - clarifies what the pane is currently showing.
+   Pinned to the top-left corner only, well clear of the centered
+   subject of most preview images, with a translucent backdrop so it
+   stays legible over both light and dark photography without ever
+   reading as a heavy overlay. */
+.cb-preview-status {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  max-width: calc(100% - 28px);
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(15, 17, 17, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(245, 245, 240, 0.16);
+  color: rgba(245, 245, 240, 0.85);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .cb-preview-shuffle,
@@ -761,7 +804,8 @@ span {
   margin: 0;
   padding: 0;
   opacity: 0;
-  transition: opacity 1.8s ease;
+  background: var(--panel);
+  transition: opacity 2.6s ease;
 }
 
 .cb-shuffle-layer.is-active {
@@ -786,17 +830,23 @@ span {
    preview-area width and its own natural height (width: 100%,
    height: auto - never cropped or letterboxed), stacked directly on
    top of one another with no gap, margin, or padding between them.
-   The stack drifts slowly upward and loops seamlessly (the track's
-   content is duplicated once in JS; translating exactly one
-   original-length distance (-50%) lands back on an identical frame,
-   so the loop point is invisible - this works regardless of each
-   image's real height, since the -50% resolves against the track's
-   own rendered height at layout time). Purely CSS-driven - nothing
-   for a visitor to grab, drag, or click. */
+   The stack eases slowly downward to reveal the rest of the images,
+   holds briefly at each end, then eases back up to the start - JS
+   measures the real scroll distance into --cb-drift-distance, and
+   since the animation's 100% keyframe is identical to its 0% (both
+   translateY(0)), the infinite loop lands back on itself with no
+   jump. Purely CSS-driven - nothing for a visitor to grab, drag, or
+   click. */
 .cb-preview-gallery {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  /* Images show at their full, uncropped natural height (never
+     stretched to fill the pane), so a short stack can leave the lower
+     part of the pane exposed - a flat neutral panel color there reads
+     cleanly instead of letting the pane's teal-tinted gradient show
+     through and clash with the photography. */
+  background: var(--panel);
 }
 
 .cb-gallery-track {
@@ -809,16 +859,36 @@ span {
   gap: 0;
 }
 
+/* animation-delay is the only "before it starts" wait - short and
+   fixed regardless of gallery length, so the selected project begins
+   drifting almost immediately instead of sitting still through a long
+   intro hold. The keyframes below hold only at the very end of each
+   lap (not the start too), so that delay is never doubled up with an
+   extra plateau once motion is already underway. */
 .cb-gallery-track.is-looping {
-  animation: cb-marquee var(--cb-marquee-duration, 20s) linear infinite;
+  animation: cb-marquee var(--cb-marquee-duration, 42s) ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+
+/* Section is scrolled out of the viewport (js/projects.js toggles this
+   via IntersectionObserver) - pause the drift in place instead of
+   stopping it, so it picks back up from the same point rather than
+   restarting or jumping when the section scrolls back into view. */
+.cb-preview.is-offscreen .cb-gallery-track.is-looping {
+  animation-play-state: paused;
 }
 
 @keyframes cb-marquee {
-  from {
+  0% {
     transform: translateY(0);
   }
-  to {
-    transform: translateY(-50%);
+  46%,
+  54% {
+    transform: translateY(var(--cb-drift-distance, 0px));
+  }
+  96%,
+  100% {
+    transform: translateY(0);
   }
 }
 

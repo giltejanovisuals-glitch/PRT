@@ -16,11 +16,12 @@
      project's own images, each at full pane width and its own natural
      height (width: 100%, height: auto - never cropped), stacked
      directly on top of one another with no gap/margin/padding, in one
-     continuous vertical sequence that drifts slowly top-to-bottom and
-     loops seamlessly (the track's content is duplicated once, and the
-     CSS animation travels exactly one original-length distance so the
-     loop point is invisible). Also fully automatic - no manual scroll,
-     drag, or arrows.
+     vertical sequence that eases slowly downward, holds briefly once
+     the bottom is revealed, eases back up to the start, holds briefly
+     there, then repeats - JS measures the real scroll distance into
+     --cb-drift-distance and the CSS animation's loop point matches its
+     start exactly, so there's never a jump. Also fully automatic - no
+     manual scroll, drag, or arrows.
 
    A project's gallery[] (data/projects-data.js) supplies real images;
    any project without one (gallery: []) falls back to generated
@@ -34,9 +35,9 @@
 ================================ */
 
 const CB_PLACEHOLDER_COUNT = 4;
-const CB_AMBIENT_INTERVAL_MS = 6000;
-const CB_MARQUEE_SECONDS_PER_TILE = 9;
-const CB_MARQUEE_MIN_SECONDS = 28;
+const CB_AMBIENT_INTERVAL_MS = 7000;
+const CB_MARQUEE_SECONDS_PER_TILE = 14;
+const CB_MARQUEE_MIN_SECONDS = 42;
 
 function cbGetPreviewImages(project) {
   if (Array.isArray(project.gallery) && project.gallery.length) {
@@ -74,8 +75,8 @@ function cbBuildCard(project) {
         <span class="cb-card-title">${title}</span>
         <span class="cb-card-category">${category}</span>
       </button>
-      <a class="cb-card-open" href="${overviewUrl}" aria-label="Open project: ${title}">
-        Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      <a class="cb-card-open" href="${overviewUrl}" aria-label="Open project: ${title} - view the full case study">
+        Open Project <span class="cb-card-open-arrow" aria-hidden="true">&#8599;</span>
       </a>
     </div>
   `;
@@ -86,6 +87,7 @@ function initCreativeBoards() {
   const preview = document.getElementById("cbPreview");
   const shuffleTrack = document.getElementById("cbShuffle");
   const galleryTrack = document.getElementById("cbGalleryTrack");
+  const previewStatus = document.getElementById("cbPreviewStatus");
 
   if (!list || !preview || !shuffleTrack || !galleryTrack) return;
 
@@ -115,35 +117,61 @@ function initCreativeBoards() {
   let activeLayerIndex = 0;
   let lastPoolItem = null;
   let ambientTimer = null;
+  let ambientRequestId = 0;
   let selectedId = null;
+  let sectionInView = true;
 
+  // Never repeat the same project back-to-back - pick only from the
+  // other projects' images when more than one project is in the pool,
+  // so the ambient sequence visibly alternates between project types
+  // instead of occasionally lingering on one project for 2-3 images.
   function cbPickPoolItem() {
     if (pool.length === 0) return null;
     if (pool.length === 1) return pool[0];
-    let pick;
-    do {
-      pick = pool[Math.floor(Math.random() * pool.length)];
-    } while (pick === lastPoolItem);
-    return pick;
+    const candidates = lastPoolItem
+      ? pool.filter((item) => item.project !== lastPoolItem.project)
+      : pool;
+    const source = candidates.length ? candidates : pool;
+    return source[Math.floor(Math.random() * source.length)];
   }
 
+  // Preloads the next image before revealing it, so the crossfade
+  // always blends outgoing -> incoming photography and never dips
+  // through the pane's empty background while the image is still
+  // downloading. A request id guards against a slow preload finishing
+  // after a newer tick has already taken over.
   function cbShowNextAmbient() {
     const item = cbPickPoolItem();
     if (!item) return;
     lastPoolItem = item;
+    const requestId = ++ambientRequestId;
     const nextLayerIndex = 1 - activeLayerIndex;
     const nextLayer = shuffleLayers[nextLayerIndex];
     const prevLayer = shuffleLayers[activeLayerIndex];
-    nextLayer.innerHTML = cbBuildTile(item.entry, item.project);
-    requestAnimationFrame(() => {
-      nextLayer.classList.add("is-active");
-      prevLayer.classList.remove("is-active");
-      activeLayerIndex = nextLayerIndex;
-    });
+
+    const reveal = () => {
+      if (requestId !== ambientRequestId) return;
+      nextLayer.innerHTML = cbBuildTile(item.entry, item.project);
+      requestAnimationFrame(() => {
+        nextLayer.classList.add("is-active");
+        prevLayer.classList.remove("is-active");
+        activeLayerIndex = nextLayerIndex;
+      });
+    };
+
+    if (item.entry.placeholder) {
+      reveal();
+      return;
+    }
+
+    const preload = new Image();
+    preload.onload = reveal;
+    preload.onerror = reveal;
+    preload.src = item.entry.image;
   }
 
   function startAmbient() {
-    if (selectedId || pool.length === 0) return;
+    if (selectedId || pool.length === 0 || !sectionInView) return;
     if (!shuffleLayers[0].innerHTML && !shuffleLayers[1].innerHTML) {
       cbShowNextAmbient();
     }
@@ -159,7 +187,16 @@ function initCreativeBoards() {
     }
   }
 
-  /* --- Selected-project gallery: seamless, slow, one-direction drift --- */
+  /* --- Selected-project gallery: slow drift down, brief pause, ease
+     back up to the start, brief pause, repeat. The track never
+     duplicates its content - the animation returns to the exact
+     translateY(0) it started from, so the loop point can't jump. --- */
+  function remeasureGalleryDrift() {
+    const distance = Math.max(galleryTrack.scrollHeight - preview.clientHeight, 0);
+    galleryTrack.style.setProperty("--cb-drift-distance", `${-distance}px`);
+    galleryTrack.classList.toggle("is-looping", distance > 0 && !reduceMotion);
+  }
+
   function showGallery(project) {
     const images = cbGetPreviewImages(project);
     const tilesHtml = images
@@ -168,20 +205,29 @@ function initCreativeBoards() {
         return `<div class="cb-gallery-tile${modifier}">${cbBuildTile(entry, project)}</div>`;
       })
       .join("");
-    const canLoop = images.length > 1 && !reduceMotion;
 
-    galleryTrack.innerHTML = canLoop ? tilesHtml + tilesHtml : tilesHtml;
-    galleryTrack.classList.toggle("is-looping", canLoop);
+    galleryTrack.classList.remove("is-looping");
+    galleryTrack.style.setProperty("--cb-drift-distance", "0px");
+    galleryTrack.innerHTML = tilesHtml;
     galleryTrack.style.setProperty(
       "--cb-marquee-duration",
       `${Math.max(images.length * CB_MARQUEE_SECONDS_PER_TILE, CB_MARQUEE_MIN_SECONDS)}s`
     );
 
     preview.classList.add("is-gallery-mode");
+    if (previewStatus) previewStatus.textContent = `Viewing: ${project.title}`;
+
+    if (reduceMotion) return;
+
+    remeasureGalleryDrift();
+    galleryTrack.querySelectorAll("img").forEach((img) => {
+      if (!img.complete) img.addEventListener("load", remeasureGalleryDrift, { once: true });
+    });
   }
 
   function showAmbient() {
     preview.classList.remove("is-gallery-mode");
+    if (previewStatus) previewStatus.textContent = "Random Preview";
     startAmbient();
   }
 
@@ -217,6 +263,37 @@ function initCreativeBoards() {
     const button = card.querySelector(".cb-card-select");
     if (button) button.addEventListener("click", () => selectCard(card, project));
   });
+
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    if (!selectedId || reduceMotion) return;
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(remeasureGalleryDrift, 150);
+  });
+
+  // Pause the preview entirely while the section is scrolled out of
+  // view - stops the ambient interval (no point picking/preloading
+  // images no one can see) and, via the .is-offscreen class below,
+  // pauses the gallery's CSS marquee in place so it resumes from
+  // exactly where it left off rather than jumping or restarting.
+  const section = preview.closest(".projects-section") || preview.closest("section");
+  if (section && "IntersectionObserver" in window) {
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          sectionInView = entry.isIntersecting;
+          preview.classList.toggle("is-offscreen", !sectionInView);
+          if (sectionInView) {
+            startAmbient();
+          } else {
+            stopAmbient();
+          }
+        });
+      },
+      { threshold: 0 }
+    );
+    visibilityObserver.observe(section);
+  }
 
   startAmbient();
 }
