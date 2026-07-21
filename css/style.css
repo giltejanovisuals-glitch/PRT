@@ -524,68 +524,80 @@ span {
 
 /* ================================
    CREATIVE BOARDS - controller + preview
-   Split-screen layout: .cb-list is a flat, simplified card stack that
-   acts as a controller (select a project, then confirm with Open) for
-   the dominant .cb-preview pane beside it. Two preview states live
-   stacked on top of each other inside .cb-preview and are crossfaded
-   by toggling .is-gallery-mode on the pane itself: .cb-preview-shuffle
-   (ambient, mixed-project, auto-advancing) and .cb-preview-gallery
-   (the selected project's own images, vertically scrollable).
+   Centered vertical composition: a dominant .cb-preview pane on top,
+   four equal-width .cb-card selectors in a row underneath, acting as
+   a controller (select a project, then confirm with Open) for the
+   pane above. Two preview states live stacked on top of each other
+   inside .cb-preview and are crossfaded by toggling .is-gallery-mode
+   on the pane itself: .cb-preview-shuffle (ambient, one random image
+   at a time, cross-fading) and .cb-preview-gallery (the selected
+   project's own images, in one continuously looping vertical drift,
+   flush with no gaps between tiles).
+   Neither preview state exposes arrows, dots, a scrollbar, or drag -
+   both are fully automatic.
 ================================ */
 .cb-layout {
-  display: grid;
-  grid-template-columns: minmax(300px, 380px) 1fr;
-  align-items: start;
-  gap: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 1600px;
+  margin: 0 auto;
   padding: 24px clamp(4px, 3vw, 36px) 64px;
 }
 
 .cb-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
 
 .cb-card {
   position: relative;
   display: flex;
-  align-items: center;
+  min-height: 168px;
   border-radius: 18px;
   background: var(--panel);
   border: 1px solid var(--line);
+  text-decoration: none;
   transition: border-color 0.35s ease, background 0.35s ease,
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
 }
 
-.cb-card {
-  text-decoration: none;
-}
-
 /* .cb-card-select is only present in the JS-enhanced markup (the
-   no-JS fallback has thumb/body as direct children of the <a class="
-   cb-card"> instead) - it's a real flex box, not display:contents,
-   so it keeps a proper hit-testing/focus box for click, tap, and
-   assistive tech instead of being invisible to them. */
+   no-JS fallback has the number/title/category as direct children of
+   the <a class="cb-card"> instead) - it's a real flex box, not
+   display:contents, so it keeps a proper hit-testing/focus box for
+   click, tap, and assistive tech instead of being invisible to them. */
 .cb-card-select {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
   appearance: none;
   background: none;
   border: none;
   padding: 0;
   margin: 0;
   font: inherit;
-  text-align: left;
   color: inherit;
   cursor: pointer;
+}
+
+.cb-card-select,
+.cb-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 20px 18px;
+  transition: padding-bottom 0.3s ease;
 }
 
 .cb-card:hover,
 .cb-card:focus-within {
   border-color: rgba(79, 195, 181, 0.4);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.015);
+  cursor: pointer;
 }
 
 .cb-card:focus-visible,
@@ -601,51 +613,39 @@ span {
   box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.55);
 }
 
+/* Reserve room for the Open pill once it's revealed, so it never
+   overlaps the number/title/category above it. */
+.cb-card.is-selected {
+  padding-bottom: 52px;
+}
+
 .cb-list.has-selection .cb-card:not(.is-selected) {
   opacity: 0.55;
 }
 
-.cb-card-thumb {
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
-  margin: 16px 0 16px 16px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--panel-soft);
+/* Small active indicator - a soft glowing dot, visible only once its
+   card is selected, independent of (and in addition to) the stronger
+   border/background so the selected state reads clearly at a glance. */
+.cb-card-active-dot {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  box-shadow: 0 0 0 4px rgba(79, 195, 181, 0.22);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cb-card-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.8) brightness(0.9);
-  transition: filter 0.35s ease;
-}
-
-.cb-card:hover .cb-card-thumb img,
-.cb-card.is-selected .cb-card-thumb img {
-  filter: saturate(1) brightness(1);
-}
-
-.cb-card-body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  transition: padding-right 0.3s ease;
-}
-
-/* Reserve room for the Open pill once it's revealed, so it never
-   overlaps the title/category text instead of just sitting on top of it. */
-.cb-card.is-selected .cb-card-body {
-  padding-right: 96px;
+.cb-card.is-selected .cb-card-active-dot {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .cb-card-number {
-  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -657,13 +657,6 @@ span {
   color: var(--accent-light);
   font-size: 11px;
   font-weight: 800;
-}
-
-.cb-card-text {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
 }
 
 .cb-card-title {
@@ -682,11 +675,11 @@ span {
 /* The "Open" pill - revealed only once its card is selected, so the
    first click always previews and the second (this) commits to the
    full project page. Absolutely positioned so its reveal never
-   reflows the card or its neighbours. */
+   reflows the rest of the card. */
 .cb-card-open {
   position: absolute;
-  right: 14px;
-  top: 50%;
+  left: 50%;
+  bottom: 16px;
   z-index: 2;
   display: inline-flex;
   align-items: center;
@@ -700,14 +693,14 @@ span {
   letter-spacing: 0.5px;
   text-transform: uppercase;
   opacity: 0;
-  transform: translateY(-50%) scale(0.85);
+  transform: translate(-50%, 6px) scale(0.85);
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cb-card.is-selected .cb-card-open {
   opacity: 1;
-  transform: translateY(-50%) scale(1);
+  transform: translate(-50%, 0) scale(1);
   pointer-events: auto;
 }
 
@@ -718,11 +711,11 @@ span {
 
 /* --- Preview pane: shuffle + gallery panels stacked and crossfaded --- */
 .cb-preview {
-  position: sticky;
-  top: 24px;
-  min-height: 460px;
-  height: 60vh;
-  max-height: 640px;
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  height: 62vh;
+  max-height: 680px;
   border-radius: 22px;
   overflow: hidden;
   background: linear-gradient(165deg, rgba(79, 195, 181, 0.12) 0%, rgba(36, 40, 39, 0.6) 45%, rgba(15, 17, 17, 0.92) 100%);
@@ -735,7 +728,7 @@ span {
   position: absolute;
   inset: 0;
   opacity: 1;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.6s ease;
 }
 
 .cb-preview.is-gallery-mode .cb-preview-shuffle {
@@ -753,65 +746,105 @@ span {
   pointer-events: auto;
 }
 
-/* Ambient mode: a horizontally scrollable, scroll-snapped strip the
-   user can drag/scroll through manually - the same mechanism JS uses
-   to auto-advance (scrollTo), so "slow auto rotation" and "let the
-   user browse manually" share one implementation instead of two. */
+/* Ambient mode: two stacked layers cross-fade between random images -
+   no scroll container, no drag, nothing for a visitor to operate. */
 .cb-preview-shuffle {
-  display: flex;
-  height: 100%;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  cursor: grab;
-  scrollbar-width: none;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
 }
 
-.cb-preview-shuffle::-webkit-scrollbar {
-  display: none;
+.cb-shuffle-layer {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 1.8s ease;
 }
 
-.cb-preview-shuffle.is-dragging {
-  cursor: grabbing;
-  scroll-snap-type: none;
+.cb-shuffle-layer.is-active {
+  opacity: 1;
 }
 
-.cb-shuffle-slide {
-  position: relative;
-  flex: 0 0 100%;
-  height: 100%;
-  scroll-snap-align: start;
-}
-
-.cb-shuffle-slide img {
+.cb-shuffle-layer img,
+.cb-shuffle-layer .pd-placeholder {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  pointer-events: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Selected-project mode: the project's own images, stacked vertically
-   and scrollable without leaving the section. */
+.cb-shuffle-layer img {
+  display: block;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* Selected-project mode: the project's own images, each at full
+   preview-area width and its own natural height (width: 100%,
+   height: auto - never cropped or letterboxed), stacked directly on
+   top of one another with no gap, margin, or padding between them.
+   The stack drifts slowly upward and loops seamlessly (the track's
+   content is duplicated once in JS; translating exactly one
+   original-length distance (-50%) lands back on an identical frame,
+   so the loop point is invisible - this works regardless of each
+   image's real height, since the -50% resolves against the track's
+   own rendered height at layout time). Purely CSS-driven - nothing
+   for a visitor to grab, drag, or click. */
 .cb-preview-gallery {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.cb-gallery-track {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  overflow-y: auto;
-  scroll-snap-type: y proximity;
+  width: 100%;
+  height: max-content;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+}
+
+.cb-gallery-track.is-looping {
+  animation: cb-marquee var(--cb-marquee-duration, 20s) linear infinite;
+}
+
+@keyframes cb-marquee {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
 }
 
 .cb-gallery-tile {
   position: relative;
-  flex-shrink: 0;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
-  scroll-snap-align: start;
+  border-radius: 0;
+}
+
+/* Placeholder tiles have no real image to derive a height from, so
+   they keep a sensible fixed shape - real photos below size purely
+   from their own proportions. */
+.cb-gallery-tile--placeholder {
+  aspect-ratio: 4 / 3;
 }
 
 .cb-gallery-tile img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
 }
 
 /* ================================

@@ -42,13 +42,8 @@
   }
 
   /* Creative Board cards: nothing important may depend on :hover, which
-     doesn't exist here - the thumbnail reads at full clarity at rest
-     instead of needing a hover to sharpen, and a tap gives brief
-     press feedback instead of relying on a hover lift. */
-  .cb-card-thumb img {
-    filter: saturate(1) brightness(1);
-  }
-
+     doesn't exist here - a tap gives brief press feedback instead of
+     relying on a hover lift. */
   .cb-card:active {
     transform: translateY(-1px) scale(0.99);
     transition-duration: 0.15s;
@@ -397,7 +392,7 @@
     font-size: 11px;
   }
 
-  /* --- Creative Boards: swipeable card row above a stacked preview --- */
+  /* --- Creative Boards: full-width preview above a swipeable card row --- */
   .projects-section {
     padding: 0;
   }
@@ -423,14 +418,21 @@
   }
 
   .cb-layout {
-    grid-template-columns: 1fr;
     gap: 18px;
     padding: 0 0 8px;
   }
 
-  /* Cards become a horizontally swipeable row instead of a controller
-     list - touch gestures do the selecting, no small arrows needed. */
+  .cb-preview {
+    margin: 0 var(--mobile-gutter);
+    width: auto;
+    height: 52vh;
+    min-height: 320px;
+  }
+
+  /* Cards become a horizontally swipeable row instead of an equal-width
+     grid - touch gestures do the selecting, no small arrows needed. */
   .cb-list {
+    display: flex;
     flex-direction: row;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -445,21 +447,8 @@
 
   .cb-card {
     flex: 0 0 78%;
+    min-height: 140px;
     scroll-snap-align: start;
-  }
-
-  /* The preview no longer sticks to the viewport once it's stacked
-     below a swipeable row - sticky here would just pin it awkwardly
-     mid-scroll. Stays position: relative (not static) since its
-     shuffle/gallery panes are position: absolute and need it as their
-     containing block. */
-  .cb-preview {
-    position: relative;
-    top: auto;
-    margin: 0 var(--mobile-gutter);
-    width: auto;
-    height: 60vh;
-    min-height: 360px;
   }
 
   /* --- Capabilities carousel --- */

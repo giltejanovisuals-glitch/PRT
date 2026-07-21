@@ -1,15 +1,27 @@
 /* ================================
    CREATIVE BOARDS CONTROLLER
-   Builds the .cb-card list and drives the .cb-preview pane from
+   Builds the .cb-card row and drives the .cb-preview pane from
    data/projects-data.js (window.PROJECTS_DATA), so editing that one
    file updates the whole "Creative Boards" section - no HTML editing
    required.
 
-   Two preview states share one .cb-preview pane:
-   - Ambient shuffle (.cb-preview-shuffle): a mixed pool of images from
-     every project, auto-advancing slowly, pausable by hover/focus/drag.
+   Two preview states live stacked on top of each other inside
+   .cb-preview and are crossfaded by toggling .is-gallery-mode on the
+   pane itself:
+   - Ambient crossfade (.cb-preview-shuffle): one image at a time,
+     pulled at random from every project, slowly cross-fading between
+     two stacked layers. No arrows, dots, scrollbars, or drag - purely
+     ambient and automatic.
    - Selected-project gallery (.cb-preview-gallery): the active
-     project's own images, stacked vertically and scrollable.
+     project's own images, each at full pane width and its own natural
+     height (width: 100%, height: auto - never cropped), stacked
+     directly on top of one another with no gap/margin/padding, in one
+     continuous vertical sequence that drifts slowly top-to-bottom and
+     loops seamlessly (the track's content is duplicated once, and the
+     CSS animation travels exactly one original-length distance so the
+     loop point is invisible). Also fully automatic - no manual scroll,
+     drag, or arrows.
+
    A project's gallery[] (data/projects-data.js) supplies real images;
    any project without one (gallery: []) falls back to generated
    .pd-placeholder tiles - the same placeholder pattern already used by
@@ -22,8 +34,9 @@
 ================================ */
 
 const CB_PLACEHOLDER_COUNT = 4;
-const CB_SHUFFLE_INTERVAL_MS = 4500;
-const CB_SHUFFLE_RESUME_MS = 3000;
+const CB_AMBIENT_INTERVAL_MS = 6000;
+const CB_MARQUEE_SECONDS_PER_TILE = 9;
+const CB_MARQUEE_MIN_SECONDS = 28;
 
 function cbGetPreviewImages(project) {
   if (Array.isArray(project.gallery) && project.gallery.length) {
@@ -51,21 +64,15 @@ function cbBuildTile(entry, project) {
 }
 
 function cbBuildCard(project) {
-  const { id, number, title, category, image, overviewUrl } = project;
+  const { id, number, title, category, overviewUrl } = project;
 
   return `
     <div class="cb-card" data-project-id="${id}">
       <button type="button" class="cb-card-select" aria-pressed="false" aria-label="Preview project: ${title}">
-        <span class="cb-card-thumb">
-          <img src="${image}" alt="" width="120" height="120" loading="lazy" />
-        </span>
-        <span class="cb-card-body">
-          <span class="cb-card-number">${number}</span>
-          <span class="cb-card-text">
-            <span class="cb-card-title">${title}</span>
-            <span class="cb-card-category">${category}</span>
-          </span>
-        </span>
+        <span class="cb-card-active-dot" aria-hidden="true"></span>
+        <span class="cb-card-number">${number}</span>
+        <span class="cb-card-title">${title}</span>
+        <span class="cb-card-category">${category}</span>
       </button>
       <a class="cb-card-open" href="${overviewUrl}" aria-label="Open project: ${title}">
         Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
@@ -78,7 +85,7 @@ function initCreativeBoards() {
   const list = document.querySelector(".cb-list");
   const preview = document.getElementById("cbPreview");
   const shuffleTrack = document.getElementById("cbShuffle");
-  const galleryTrack = document.getElementById("cbGallery");
+  const galleryTrack = document.getElementById("cbGalleryTrack");
 
   if (!list || !preview || !shuffleTrack || !galleryTrack) return;
 
@@ -87,100 +94,95 @@ function initCreativeBoards() {
 
   list.innerHTML = projects.map(cbBuildCard).join("");
 
-  // Ambient shuffle pool: up to 2 images per project, mixed together
-  // and shuffled once so the resting state already reads as "all work".
-  const pool = [];
-  projects.forEach((project) => {
-    cbGetPreviewImages(project)
-      .slice(0, 2)
-      .forEach((entry) => pool.push({ entry, project }));
-  });
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  shuffleTrack.innerHTML = pool
-    .map(({ entry, project }) => `<div class="cb-shuffle-slide">${cbBuildTile(entry, project)}</div>`)
-    .join("");
-
   // prefersReducedMotion is declared by js/script.js, which loads after
   // this file but before DOMContentLoaded fires, so it's already in
   // scope by the time this callback runs. Guarded defensively in case
   // load order ever changes.
   const reduceMotion = typeof prefersReducedMotion !== "undefined" && prefersReducedMotion;
 
-  let shuffleTimer = null;
-  let resumeTimer = null;
+  /* --- Ambient crossfade: one image at a time, random across projects --- */
+  // Mixed pool: up to 3 images per project, drawn from at random (not
+  // played sequentially), so the resting state reads as "all work"
+  // without ever repeating a fixed order.
+  const pool = [];
+  projects.forEach((project) => {
+    cbGetPreviewImages(project)
+      .slice(0, 3)
+      .forEach((entry) => pool.push({ entry, project }));
+  });
+
+  const shuffleLayers = shuffleTrack.querySelectorAll(".cb-shuffle-layer");
+  let activeLayerIndex = 0;
+  let lastPoolItem = null;
+  let ambientTimer = null;
   let selectedId = null;
 
-  function stopShuffle() {
-    if (shuffleTimer) {
-      window.clearInterval(shuffleTimer);
-      shuffleTimer = null;
+  function cbPickPoolItem() {
+    if (pool.length === 0) return null;
+    if (pool.length === 1) return pool[0];
+    let pick;
+    do {
+      pick = pool[Math.floor(Math.random() * pool.length)];
+    } while (pick === lastPoolItem);
+    return pick;
+  }
+
+  function cbShowNextAmbient() {
+    const item = cbPickPoolItem();
+    if (!item) return;
+    lastPoolItem = item;
+    const nextLayerIndex = 1 - activeLayerIndex;
+    const nextLayer = shuffleLayers[nextLayerIndex];
+    const prevLayer = shuffleLayers[activeLayerIndex];
+    nextLayer.innerHTML = cbBuildTile(item.entry, item.project);
+    requestAnimationFrame(() => {
+      nextLayer.classList.add("is-active");
+      prevLayer.classList.remove("is-active");
+      activeLayerIndex = nextLayerIndex;
+    });
+  }
+
+  function startAmbient() {
+    if (selectedId || pool.length === 0) return;
+    if (!shuffleLayers[0].innerHTML && !shuffleLayers[1].innerHTML) {
+      cbShowNextAmbient();
+    }
+    if (reduceMotion || pool.length < 2) return;
+    stopAmbient();
+    ambientTimer = window.setInterval(cbShowNextAmbient, CB_AMBIENT_INTERVAL_MS);
+  }
+
+  function stopAmbient() {
+    if (ambientTimer) {
+      window.clearInterval(ambientTimer);
+      ambientTimer = null;
     }
   }
 
-  function startShuffle() {
-    if (reduceMotion || pool.length < 2 || selectedId) return;
-    stopShuffle();
-    shuffleTimer = window.setInterval(() => {
-      const slideWidth = shuffleTrack.clientWidth;
-      const atEnd = shuffleTrack.scrollLeft + slideWidth >= shuffleTrack.scrollWidth - 4;
-      shuffleTrack.scrollTo({
-        left: atEnd ? 0 : shuffleTrack.scrollLeft + slideWidth,
-        behavior: "smooth",
-      });
-    }, CB_SHUFFLE_INTERVAL_MS);
-  }
-
-  function pauseShuffleTemporarily() {
-    if (selectedId) return;
-    stopShuffle();
-    if (resumeTimer) window.clearTimeout(resumeTimer);
-    resumeTimer = window.setTimeout(startShuffle, CB_SHUFFLE_RESUME_MS);
-  }
-
-  // Manual browse: hover/focus pauses auto-advance; a mouse can also
-  // grab and drag the track directly (touch/trackpad already scroll it
-  // natively, so drag-follow is skipped for touch pointers).
-  shuffleTrack.addEventListener("pointerenter", stopShuffle);
-  shuffleTrack.addEventListener("pointerleave", () => { if (!selectedId) startShuffle(); });
-  shuffleTrack.addEventListener("focusin", stopShuffle);
-  shuffleTrack.addEventListener("focusout", () => { if (!selectedId) startShuffle(); });
-
-  let dragState = null;
-  shuffleTrack.addEventListener("pointerdown", (event) => {
-    stopShuffle();
-    if (event.pointerType === "touch") return;
-    dragState = { startX: event.clientX, scrollLeft: shuffleTrack.scrollLeft };
-    shuffleTrack.classList.add("is-dragging");
-    shuffleTrack.setPointerCapture(event.pointerId);
-  });
-  shuffleTrack.addEventListener("pointermove", (event) => {
-    if (!dragState) return;
-    shuffleTrack.scrollLeft = dragState.scrollLeft - (event.clientX - dragState.startX);
-  });
-  function endDrag() {
-    if (dragState) {
-      dragState = null;
-      shuffleTrack.classList.remove("is-dragging");
-    }
-    pauseShuffleTemporarily();
-  }
-  shuffleTrack.addEventListener("pointerup", endDrag);
-  shuffleTrack.addEventListener("pointercancel", endDrag);
-
+  /* --- Selected-project gallery: seamless, slow, one-direction drift --- */
   function showGallery(project) {
-    galleryTrack.innerHTML = cbGetPreviewImages(project)
-      .map((entry) => `<div class="cb-gallery-tile">${cbBuildTile(entry, project)}</div>`)
+    const images = cbGetPreviewImages(project);
+    const tilesHtml = images
+      .map((entry) => {
+        const modifier = entry.placeholder ? " cb-gallery-tile--placeholder" : "";
+        return `<div class="cb-gallery-tile${modifier}">${cbBuildTile(entry, project)}</div>`;
+      })
       .join("");
-    galleryTrack.scrollTop = 0;
+    const canLoop = images.length > 1 && !reduceMotion;
+
+    galleryTrack.innerHTML = canLoop ? tilesHtml + tilesHtml : tilesHtml;
+    galleryTrack.classList.toggle("is-looping", canLoop);
+    galleryTrack.style.setProperty(
+      "--cb-marquee-duration",
+      `${Math.max(images.length * CB_MARQUEE_SECONDS_PER_TILE, CB_MARQUEE_MIN_SECONDS)}s`
+    );
+
     preview.classList.add("is-gallery-mode");
   }
 
-  function showShuffle() {
+  function showAmbient() {
     preview.classList.remove("is-gallery-mode");
-    startShuffle();
+    startAmbient();
   }
 
   function selectCard(card, project) {
@@ -195,7 +197,7 @@ function initCreativeBoards() {
     if (alreadySelected) {
       selectedId = null;
       list.classList.remove("has-selection");
-      showShuffle();
+      showAmbient();
       return;
     }
 
@@ -204,7 +206,7 @@ function initCreativeBoards() {
     const btn = card.querySelector(".cb-card-select");
     if (btn) btn.setAttribute("aria-pressed", "true");
     list.classList.add("has-selection");
-    stopShuffle();
+    stopAmbient();
     showGallery(project);
   }
 
@@ -216,7 +218,7 @@ function initCreativeBoards() {
     if (button) button.addEventListener("click", () => selectCard(card, project));
   });
 
-  startShuffle();
+  startAmbient();
 }
 
 document.addEventListener("DOMContentLoaded", initCreativeBoards);

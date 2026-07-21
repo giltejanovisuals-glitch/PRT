@@ -155,11 +155,16 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cb-card,
-  .cb-card-thumb img,
+  .cb-card-active-dot,
   .cb-card-open,
   .cb-preview-shuffle,
-  .cb-preview-gallery {
+  .cb-preview-gallery,
+  .cb-shuffle-layer {
     transition: none;
+  }
+
+  .cb-gallery-track.is-looping {
+    animation: none;
   }
 }
 
