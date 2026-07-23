@@ -65,15 +65,19 @@ function cbBuildTile(entry, project) {
 }
 
 function cbBuildCard(project) {
-  const { id, number, title, category, overviewUrl } = project;
+  const { id, title, overviewUrl, logo, logoAlt, cardSummary } = project;
 
   return `
     <div class="cb-card" data-project-id="${id}">
       <button type="button" class="cb-card-select" aria-pressed="false" aria-label="Preview project: ${title}">
         <span class="cb-card-active-dot" aria-hidden="true"></span>
-        <span class="cb-card-number">${number}</span>
-        <span class="cb-card-title">${title}</span>
-        <span class="cb-card-category">${category}</span>
+        <span class="cb-card-face cb-card-face-default">
+          <img class="cb-card-logo" src="${logo}" alt="${logoAlt || title}" loading="lazy" />
+        </span>
+        <span class="cb-card-face cb-card-face-summary">
+          <span class="cb-card-title">${title}</span>
+          <span class="cb-card-summary">${cardSummary}</span>
+        </span>
       </button>
       <a class="cb-card-open" href="${overviewUrl}" aria-label="Open project: ${title} - view the full case study">
         Open Project <span class="cb-card-open-arrow" aria-hidden="true">&#8599;</span>
